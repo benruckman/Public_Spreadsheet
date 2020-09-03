@@ -21,15 +21,21 @@ namespace FormulaEvaluator
 
             //Declare Value and Operator Stack
             Stack<int> valueStack = new Stack<int>();
-            Stack<int> operatorStack = new Stack<int>();
+            Stack<String> operatorStack = new Stack<String>();
 
             //Iterate through tokens in substring
             foreach(String t in substrings)
             {
-                //TODO: Implement algorithm
-                //trim token of whitespace
-                
-
+                //If t is an integer
+                if(Regex.IsMatch(t.Trim(), "[0-9]+"))
+                {
+                    IntegerHandler(operatorStack, valueStack, int.Parse(t));
+                }
+                //If t is a variable
+                else if (Regex.IsMatch(t, "^[a-zA-Z]+[0-9]+$"))
+                {
+                    IntegerHandler(operatorStack, valueStack, variableEvaluator(t));
+                }
             }
         }
 
@@ -40,18 +46,30 @@ namespace FormulaEvaluator
          * operation: String of operation to be applied, ***assumes whitespace has already been trimmed
          * throws argument expression
          */
-        private static int simpleExpressionSolver (int term1, int term2, char operation)
+        private static int SimpleExpressionSolver (int term1, int term2, String operation)
         {
-            if (operation == '+')
+            if (operation == "+")
                 return term1 + term2;
-            else if (operation == '-')
+            else if (operation == "-")
                 return term1 - term2;
-            else if (operation == '*')
+            else if (operation == "*")
                 return term1 * term2;
-            else if (operation == '/')
+            else if (operation == "/")
                 return term1 / term2;
             else
                 throw new ArgumentException();
+        }
+
+        /*
+         * Handles algorithm when current token is an integer
+         */
+        private static void IntegerHandler (Stack<String> operatorStack, Stack<int> valueStack, int currentToken)
+        {
+            if (operatorStack.Peek() == "/" | operatorStack.Peek() == "*")
+            {
+                valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), currentToken, operatorStack.Pop()));
+            }
+            else valueStack.Push(currentToken);
         }
             
 
