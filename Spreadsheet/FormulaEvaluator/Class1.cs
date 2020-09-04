@@ -27,26 +27,36 @@ namespace FormulaEvaluator
             foreach(String t in substrings)
             {
                 currentToken = t.Trim();
-                //If t is an integer
+                //If currentToken is an integer
                 if(Regex.IsMatch(currentToken, "^[0-9]+"))
                 {
                     IntegerHandler(operatorStack, valueStack, int.Parse(currentToken));
                 }
-                //If t is a variable
+                //If currentToken is a variable
                 else if(Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$"))
                 {
                     IntegerHandler(operatorStack, valueStack, variableEvaluator(currentToken));
                 }
-                //If t is a + or -
+                //If currentToken is a + or -
                 else if(currentToken == "+" || currentToken == "-")
                 {
                     AdditionSubtractionHandler(operatorStack, valueStack);
                     operatorStack.Push(currentToken);
                 }
-                //If t is * or /
+                //If currentToken is * or /
                 else if(currentToken == "*" | currentToken == "/")
                 {
                     operatorStack.Push(currentToken);
+                }
+                //If currentToken is a (
+                else if(currentToken == "(")
+                {
+                    operatorStack.Push(currentToken);
+                }
+                //If currentToken is a )
+                else if(currentToken == ")")
+                {
+                    ClosedParenthesesHandler(operatorStack, valueStack);
                 }
             }
 
@@ -133,6 +143,28 @@ namespace FormulaEvaluator
             else 
             { 
                 throw new ArgumentException("Error, wrong expression found in operator stack"); 
+            }
+        }
+
+        private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<int> valueStack)
+        {
+            if(operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            {
+                //pop'd in this order to ensure left to right order is maintened
+                int term2 = valueStack.Pop();
+                int term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
+            }
+
+            //Operator should be (
+            if (operatorStack.Pop() != "(")
+            {
+                throw new ArgumentException("Error, ( parenthese did not appear when it should have");
+            }
+
+            if(operatorStack.Peek() == "*" | operatorStack.Peek() == "/")
+            {
+                valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), valueStack.Pop(), operatorStack.Pop()));
             }
         }
     }
