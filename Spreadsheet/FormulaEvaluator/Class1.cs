@@ -24,20 +24,25 @@ namespace FormulaEvaluator
             Stack<String> operatorStack = new Stack<String>();
 
             //Iterate through tokens in substring
+            String currentToken;
             foreach(String t in substrings)
             {
+                currentToken = t.Trim();
                 //If t is an integer
-                if(Regex.IsMatch(t.Trim(), "[0-9]+"))
+                if(Regex.IsMatch(currentToken, "[0-9]+"))
                 {
-                    IntegerHandler(operatorStack, valueStack, int.Parse(t));
+                    IntegerHandler(operatorStack, valueStack, int.Parse(currentToken));
                 }
                 //If t is a variable
-                else if (Regex.IsMatch(t, "^[a-zA-Z]+[0-9]+$"))
+                else if(Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$"))
                 {
-                    IntegerHandler(operatorStack, valueStack, variableEvaluator(t));
+                    IntegerHandler(operatorStack, valueStack, variableEvaluator(currentToken));
                 }
                 //If t is a + or -
-
+                else if(currentToken == "+" || currentToken == "-")
+                {
+                    AdditionSubtractionHandler(operatorStack, valueStack, currentToken);
+                }
             }
         }
 
@@ -45,7 +50,7 @@ namespace FormulaEvaluator
          * Solves arithmetic expressions with two values and one operator
          * term1: left term in expression
          * term2: right term in expression
-         * operation: String of operation to be applied, ***assumes whitespace has already been trimmed
+         * operation: String of operation to be applied
          * throws argument expression
          */
         private static int SimpleExpressionSolver (int term1, int term2, String operation)
@@ -66,6 +71,7 @@ namespace FormulaEvaluator
          * Handles algorithm when current token is an integer
          * operatorStack: reference to stack containing all of the seen operators in expression
          * valueStack: reference to stack containg all of the seen values in expression
+         * currentToken
          */
         private static void IntegerHandler (Stack<String> operatorStack, Stack<int> valueStack, int currentToken)
         {
@@ -75,9 +81,25 @@ namespace FormulaEvaluator
             }
             else valueStack.Push(currentToken);
         }
-            
 
-        //TODO: Follow PS1 Instructions
+        /*
+         * Handles algorithm when current token is either + or -
+         * operatorStack: reference to stack containing all of the seen operators in expression
+         * valueStack: reference to stack containg all of the seen values in expression
+         * currentToken
+         */
+        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack, String currentToken)
+        {
+            if(operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            {
+                //pop'd in this order to ensure left to right order is maintened
+                int term2 = valueStack.Pop();
+                int term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
+            }
+
+            operatorStack.Push(currentToken);
+        }
     }
 
    
