@@ -36,6 +36,8 @@ namespace FormulaEvaluator
                 {
                     IntegerHandler(operatorStack, valueStack, variableEvaluator(t));
                 }
+                //If t is a + or -
+
             }
         }
 
@@ -62,6 +64,8 @@ namespace FormulaEvaluator
 
         /*
          * Handles algorithm when current token is an integer
+         * operatorStack: reference to stack containing all of the seen operators in expression
+         * valueStack: reference to stack containg all of the seen values in expression
          */
         private static void IntegerHandler (Stack<String> operatorStack, Stack<int> valueStack, int currentToken)
         {
