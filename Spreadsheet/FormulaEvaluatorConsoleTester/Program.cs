@@ -21,6 +21,14 @@ namespace FormulaEvaluatorConsoleTester
             Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("1+2*2", variableEvaluator));
             Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("2*2-1", variableEvaluator));
             Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("1-2*2", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("4/2+1", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("1+6/2", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("8/3-1", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("1-7/5", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("(2+1)*2", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("2+(2-1)", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("(2/2)(2+1)", variableEvaluator));
+            Console.WriteLine(FormulaEvaluator.Evaluator.Evaluate("((2+1)+1)*2", variableEvaluator));
             Console.WriteLine("Hello World!");
             Console.ReadKey();
         }

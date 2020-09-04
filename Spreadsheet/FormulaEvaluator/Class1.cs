@@ -133,6 +133,10 @@ namespace FormulaEvaluator
             {
                 return;
             }
+            else if (operatorStack.Peek() == "(")
+            {
+                return;
+            }
             else if (operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
             {
                 //pop'd in this order to ensure left to right order is maintened
@@ -148,7 +152,7 @@ namespace FormulaEvaluator
 
         private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<int> valueStack)
         {
-            if(operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            if(operatorStack.Count() > 0 && operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
             {
                 //pop'd in this order to ensure left to right order is maintened
                 int term2 = valueStack.Pop();
@@ -162,7 +166,7 @@ namespace FormulaEvaluator
                 throw new ArgumentException("Error, ( parenthese did not appear when it should have");
             }
 
-            if(operatorStack.Peek() == "*" | operatorStack.Peek() == "/")
+            if(operatorStack.Count() > 0 && operatorStack.Peek() == "*" | operatorStack.Peek() == "/")
             {
                 valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), valueStack.Pop(), operatorStack.Pop()));
             }
