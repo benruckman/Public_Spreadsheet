@@ -41,8 +41,20 @@ namespace FormulaEvaluator
                 //If t is a + or -
                 else if(currentToken == "+" || currentToken == "-")
                 {
-                    AdditionSubtractionHandler(operatorStack, valueStack, currentToken);
+                    AdditionSubtractionHandler(operatorStack, valueStack);
+                    operatorStack.Push(currentToken);
                 }
+            }
+
+            //After every token has been gone through
+            if(operatorStack.Count() == 0)
+            {
+                return valueStack.Pop();
+            }
+            else
+            {
+                AdditionSubtractionHandler(operatorStack, valueStack);
+                return valueStack.Pop();
             }
         }
 
@@ -56,15 +68,25 @@ namespace FormulaEvaluator
         private static int SimpleExpressionSolver (int term1, int term2, String operation)
         {
             if (operation == "+")
+            {
                 return term1 + term2;
+            }
             else if (operation == "-")
+            {
                 return term1 - term2;
+            }
             else if (operation == "*")
+            {
                 return term1 * term2;
+            }
             else if (operation == "/")
+            {
                 return term1 / term2;
+            }
             else
+            {
                 throw new ArgumentException();
+            }
         }
 
         /*
@@ -79,7 +101,10 @@ namespace FormulaEvaluator
             {
                 valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), currentToken, operatorStack.Pop()));
             }
-            else valueStack.Push(currentToken);
+            else
+            {
+                valueStack.Push(currentToken);
+            }
         }
 
         /*
@@ -88,17 +113,19 @@ namespace FormulaEvaluator
          * valueStack: reference to stack containg all of the seen values in expression
          * currentToken
          */
-        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack, String currentToken)
+        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack)
         {
-            if(operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            if (operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
             {
                 //pop'd in this order to ensure left to right order is maintened
                 int term2 = valueStack.Pop();
                 int term1 = valueStack.Pop();
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
-
-            operatorStack.Push(currentToken);
+            else 
+            { 
+                throw new ArgumentException("Error, wrong expression found in operator stack"); 
+            }
         }
     }
 
