@@ -9,7 +9,6 @@ namespace FormulaEvaluator
     {
         public delegate int Lookup(String v);
 
-
         /*
          * Method for evaluating intger arithmetic expressions
          * 
@@ -29,7 +28,7 @@ namespace FormulaEvaluator
             {
                 currentToken = t.Trim();
                 //If t is an integer
-                if(Regex.IsMatch(currentToken, "[0-9]+"))
+                if(Regex.IsMatch(currentToken, "^[0-9]+"))
                 {
                     IntegerHandler(operatorStack, valueStack, int.Parse(currentToken));
                 }
@@ -42,6 +41,11 @@ namespace FormulaEvaluator
                 else if(currentToken == "+" || currentToken == "-")
                 {
                     AdditionSubtractionHandler(operatorStack, valueStack);
+                    operatorStack.Push(currentToken);
+                }
+                //If t is * or /
+                else if(currentToken == "*" | currentToken == "/")
+                {
                     operatorStack.Push(currentToken);
                 }
             }
@@ -97,7 +101,7 @@ namespace FormulaEvaluator
          */
         private static void IntegerHandler (Stack<String> operatorStack, Stack<int> valueStack, int currentToken)
         {
-            if (operatorStack.Peek() == "/" | operatorStack.Peek() == "*")
+            if (operatorStack.Count() > 0 && (operatorStack.Peek() == "/" | operatorStack.Peek() == "*"))
             {
                 valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), currentToken, operatorStack.Pop()));
             }
@@ -115,7 +119,11 @@ namespace FormulaEvaluator
          */
         private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack)
         {
-            if (operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            if (operatorStack.Count() == 0)
+            {
+                return;
+            }
+            else if (operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
             {
                 //pop'd in this order to ensure left to right order is maintened
                 int term2 = valueStack.Pop();
