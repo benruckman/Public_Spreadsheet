@@ -27,6 +27,15 @@ namespace FormulaEvaluator
             foreach(String t in substrings)
             {
                 currentToken = t.Trim();
+
+                if (!Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$")
+                    && !Regex.IsMatch(currentToken, "^[0-9]+")
+                    && currentToken != "*" && currentToken != "/" && currentToken != "+" 
+                    && currentToken != "-" && currentToken != "(" && currentToken != ")" && currentToken != "")
+                {
+                    throw new ArgumentException("Invalid Character in Expression");
+                }
+
                 //If currentToken is an integer
                 if(Regex.IsMatch(currentToken, "^[0-9]+"))
                 {
