@@ -50,8 +50,7 @@ namespace FormulaEvaluator
                 //If currentToken is a + or -
                 else if(currentToken == "+" || currentToken == "-")
                 {
-                    AdditionSubtractionHandler(operatorStack, valueStack);
-                    operatorStack.Push(currentToken);
+                    AdditionSubtractionHandler(operatorStack, valueStack, currentToken);
                 }
                 //If currentToken is * or /
                 else if(currentToken == "*" | currentToken == "/")
@@ -77,8 +76,9 @@ namespace FormulaEvaluator
             }
             else
             {
-                AdditionSubtractionHandler(operatorStack, valueStack);
-                return valueStack.Pop();
+                int term2 = valueStack.Pop();
+                int term1 = valueStack.Pop();
+                return SimpleExpressionSolver(term1, term2, operatorStack.Pop());
             }
         }
 
@@ -142,27 +142,17 @@ namespace FormulaEvaluator
          * valueStack: reference to stack containg all of the seen values in expression
          * currentToken
          */
-        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack)
+        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack, String currentToken)
         {
-            if (operatorStack.Count() == 0)
-            {
-                return;
-            }
-            else if (operatorStack.Peek() == "(")
-            {
-                return;
-            }
-            else if (operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            if (operatorStack.Count() != 0 && (operatorStack.Peek() == "+" | operatorStack.Peek() == "-"))
             {
                 //pop'd in this order to ensure left to right order is maintened
                 int term2 = valueStack.Pop();
                 int term1 = valueStack.Pop();
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
-            else 
-            { 
-                throw new ArgumentException("Error, wrong expression found in operator stack"); 
-            }
+
+            operatorStack.Push(currentToken);
         }
 
         private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<int> valueStack)
@@ -181,9 +171,11 @@ namespace FormulaEvaluator
                 throw new ArgumentException("Error, ( parenthese did not appear when it should have");
             }
 
-            if(operatorStack.Count() > 0 && operatorStack.Peek() == "*" | operatorStack.Peek() == "/")
+            if(operatorStack.Count() > 0 && (operatorStack.Peek() == "*" | operatorStack.Peek() == "/"))
             {
-                valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), valueStack.Pop(), operatorStack.Pop()));
+                int term2 = valueStack.Pop();
+                int term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
         }
     }
