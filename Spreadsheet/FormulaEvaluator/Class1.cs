@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace FormulaEvaluator
 {
@@ -104,6 +105,10 @@ namespace FormulaEvaluator
             }
             else if (operation == "/")
             {
+                if (term2 == 0)
+                {
+                    throw new ArgumentException("Invalid Expression cant divide by 0");
+                }
                 return term1 / term2;
             }
             else
@@ -122,6 +127,7 @@ namespace FormulaEvaluator
         {
             if (operatorStack.Count() > 0 && (operatorStack.Peek() == "/" | operatorStack.Peek() == "*"))
             {
+
                 valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), currentToken, operatorStack.Pop()));
             }
             else
