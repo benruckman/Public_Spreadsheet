@@ -79,7 +79,11 @@ namespace SpreadsheetUtilities
         /// </summary>
         public int this[string s]
         {
-            get { return Dependees[s].Count; }
+            get 
+            { 
+                if (!Dependees.ContainsKey(s)) { return 0; }
+                return Dependees[s].Count; 
+            }
         }
 
 
@@ -88,6 +92,8 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependents(string s)
         {
+            if (!Dependents.ContainsKey(s)) { return false; }
+
             return Dependents[s].Count > 0;
         }
 
@@ -97,6 +103,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public bool HasDependees(string s)
         {
+            if (!Dependees.ContainsKey(s)) { return false; }
             return Dependees[s].Count > 0;
         }
 
@@ -106,7 +113,11 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<string> GetDependents(string s)
         {
-            return Dependents[s].ToArray();
+            if (Dependents.ContainsKey(s))
+            {
+                return Dependents[s].ToList();
+            }
+            else { return new List<string>(); }
         }
 
         /// <summary>
@@ -114,7 +125,11 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<string> GetDependees(string s)
         {
-            return Dependees[s].ToArray();
+            if (Dependees.ContainsKey(s))
+            {
+                return Dependees[s].ToList();
+            }
+            else { return new List<string>(); }
         }
 
 
@@ -130,6 +145,10 @@ namespace SpreadsheetUtilities
         /// <param name="t"> t cannot be evaluated until s is</param>        /// 
         public void AddDependency(string s, string t)
         {
+            if(!Dependents.ContainsKey(s) || !Dependents[s].Contains(t))
+            {
+                Size++;
+            }
             AddPairToDictionary(s, t, Dependents);
             AddPairToDictionary(t, s, Dependees);
         }
@@ -159,8 +178,12 @@ namespace SpreadsheetUtilities
         /// <param name="t"></param>
         public void RemoveDependency(string s, string t)
         {
-            RemovePairFromDictionary(s, t, Dependents);
-            RemovePairFromDictionary(t, s, Dependees);
+            if(Dependents.ContainsKey(s) && Dependents[s].Contains(t))
+            {
+                RemovePairFromDictionary(s, t, Dependents);
+                RemovePairFromDictionary(t, s, Dependees);
+                Size--;
+            }
         }
 
         ///<summary>
@@ -181,6 +204,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
+
         }
 
 
