@@ -39,6 +39,9 @@ namespace SpreadsheetUtilities
     //     dependees("c") = {"a"}
     //     dependees("d") = {"b", "d"}
     /// </summary>
+
+    
+
     public class DependencyGraph
     {
         //Map of all dependents
@@ -204,23 +207,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
-            if (Dependents.ContainsKey(s))
-            {
-                foreach(string currentDependee in GetDependents(s))
-                {
-                    RemovePairFromDictionary(currentDependee, s, Dependees);
-                    Size--;
-                }
-            }
-
-            Dependents.Remove(s);
-
-            foreach (string currentDependent in newDependents)
-            {
-                AddPairToDictionary(s, currentDependent, Dependents);
-                AddPairToDictionary(currentDependent, s, Dependees);
-                Size++;
-            }
+            ReplaceSet(s, newDependents, Dependents, Dependees, GetDependents);
         }
 
 
@@ -230,25 +217,35 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependees(string s, IEnumerable<string> newDependees)
         {
-            if (Dependees.ContainsKey(s))
+            ReplaceSet(s, newDependees, Dependees, Dependents, GetDependees);
+        }
+
+        private delegate IEnumerable<string> GetPairedElements(string Key);
+
+        /// <summary>
+        /// Helper Method for replacing sets
+        /// </summary>
+        private void ReplaceSet(string Key, IEnumerable<string> newSet, Dictionary<string, 
+            HashSet<string>> ChangingDic, Dictionary<string, HashSet<string>> AdjustingDic, GetPairedElements GetListOfPairedElements)
+        {
+            if (ChangingDic.ContainsKey(Key))
             {
-                foreach (string currentDependent in GetDependees(s))
+                foreach (string currentDependent in GetListOfPairedElements(Key))
                 {
-                    RemovePairFromDictionary(currentDependent, s, Dependents);
+                    RemovePairFromDictionary(currentDependent, Key, AdjustingDic);
                     Size--;
                 }
             }
 
-            Dependees.Remove(s);
+            ChangingDic.Remove(Key);
 
-            foreach (string currentDependee in newDependees)
+            foreach (string currentDependee in newSet)
             {
-                AddPairToDictionary(s, currentDependee, Dependees);
-                AddPairToDictionary(currentDependee, s, Dependents);
+                AddPairToDictionary(Key, currentDependee, ChangingDic);
+                AddPairToDictionary(currentDependee, Key, AdjustingDic);
                 Size++;
             }
         }
-
     }
 
 }
