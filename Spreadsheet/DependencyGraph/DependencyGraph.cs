@@ -42,9 +42,9 @@ namespace SpreadsheetUtilities
     public class DependencyGraph
     {
         //Map of all dependents
-        private Dictionary<String, HashSet<String>> Dependents;
+        private Dictionary<String, HashSet<string>> Dependents;
         //Map of all dependees
-        private Dictionary<String, HashSet<String>> Dependees;
+        private Dictionary<String, HashSet<string>> Dependees;
 
         private int p_size;
 
@@ -53,8 +53,8 @@ namespace SpreadsheetUtilities
         /// </summary>
         public DependencyGraph()
         {
-            Dependents = new Dictionary<String, HashSet<String>>();
-            Dependees = new Dictionary<String, HashSet<String>>();
+            Dependents = new Dictionary<string, HashSet<string>>();
+            Dependees = new Dictionary<string, HashSet<string>>();
             p_size = 0;
         }
 
@@ -130,8 +130,27 @@ namespace SpreadsheetUtilities
         /// <param name="t"> t cannot be evaluated until s is</param>        /// 
         public void AddDependency(string s, string t)
         {
+            AddPairToDictionary(s, t, Dependents);
+            AddPairToDictionary(t, s, Dependees);
         }
 
+        /// <summary>
+        /// Helper method for adding items to dictionaries
+        /// if adding to dependents graph, s is Key and t is ItemToBeAdded
+        /// if adding to dependees graph, t is Key and s is ItemToBeAdded
+        /// </summary>
+        private void AddPairToDictionary(string Key, string ItemToBeAdded, Dictionary<string, HashSet<string>> d)
+        {
+            if (d.ContainsKey(Key))
+            {
+                d[Key].Add(ItemToBeAdded);
+            }
+            else
+            {
+                d.Add(Key, new HashSet<string>());
+                d[Key].Add(ItemToBeAdded);
+            }
+        }
 
         /// <summary>
         /// Removes the ordered pair (s,t), if it exists
@@ -140,6 +159,19 @@ namespace SpreadsheetUtilities
         /// <param name="t"></param>
         public void RemoveDependency(string s, string t)
         {
+            RemovePairFromDictionary(s, t, Dependents);
+            RemovePairFromDictionary(t, s, Dependees);
+        }
+
+        ///<summary>
+        /// Helper method for removing pairs from dictionaries
+        /// </summary>
+        private void RemovePairFromDictionary(string Key, string ItemToBeRemoved, Dictionary<string, HashSet<string>> d)
+        {
+            if (d.ContainsKey(Key))
+            {
+                d[Key].Remove(ItemToBeRemoved);
+            }
         }
 
 
