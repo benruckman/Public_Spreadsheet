@@ -204,7 +204,23 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependents(string s, IEnumerable<string> newDependents)
         {
+            if (Dependents.ContainsKey(s))
+            {
+                foreach(string currentDependee in GetDependents(s))
+                {
+                    RemovePairFromDictionary(currentDependee, s, Dependees);
+                    Size--;
+                }
+            }
 
+            Dependents.Remove(s);
+
+            foreach (string currentDependent in newDependents)
+            {
+                AddPairToDictionary(s, currentDependent, Dependents);
+                AddPairToDictionary(currentDependent, s, Dependees);
+                Size++;
+            }
         }
 
 
@@ -214,6 +230,23 @@ namespace SpreadsheetUtilities
         /// </summary>
         public void ReplaceDependees(string s, IEnumerable<string> newDependees)
         {
+            if (Dependees.ContainsKey(s))
+            {
+                foreach (string currentDependent in GetDependees(s))
+                {
+                    RemovePairFromDictionary(currentDependent, s, Dependents);
+                    Size--;
+                }
+            }
+
+            Dependees.Remove(s);
+
+            foreach (string currentDependee in newDependees)
+            {
+                AddPairToDictionary(s, currentDependee, Dependees);
+                AddPairToDictionary(currentDependee, s, Dependents);
+                Size++;
+            }
         }
 
     }
