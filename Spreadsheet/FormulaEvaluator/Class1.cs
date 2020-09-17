@@ -36,6 +36,10 @@ namespace FormulaEvaluator
                 {
                     throw new ArgumentException("Invalid Character in Expression");
                 }
+                else if (substrings.Count() == 1 && currentToken == "")
+                {
+                    throw new ArgumentException("Empty String");
+                }
 
                 //If currentToken is an integer
                 if(Regex.IsMatch(currentToken, "^[0-9]+"))
@@ -74,11 +78,15 @@ namespace FormulaEvaluator
             {
                 return valueStack.Pop();
             }
-            else
+            else if (operatorStack.Count() == 1 && valueStack.Count() == 2)
             {
                 int term2 = valueStack.Pop();
                 int term1 = valueStack.Pop();
                 return SimpleExpressionSolver(term1, term2, operatorStack.Pop());
+            }
+            else
+            {
+                throw new ArgumentException("Invalid Formula Entered");
             }
         }
 
@@ -166,7 +174,7 @@ namespace FormulaEvaluator
             }
 
             //Operator should be (
-            if (operatorStack.Pop() != "(")
+            if (operatorStack.Count == 0 || operatorStack.Pop() != "(")
             {
                 throw new ArgumentException("Error, ( parenthese did not appear when it should have");
             }
