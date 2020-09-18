@@ -186,6 +186,11 @@ namespace FormulaEvaluator
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
         }
+
+        public static object Evaluate(string normalizedFormula, Func<string, double> lookup)
+        {
+            throw new NotImplementedException();
+        }
     }
 
    

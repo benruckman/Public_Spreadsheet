@@ -17,6 +17,7 @@
 //                to numeric tokens
 
 
+using FormulaEvaluator;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -229,7 +230,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public object Evaluate(Func<string, double> lookup)
         {
-            return null;
+            return Evaluator.Evaluate(NormalizedFormula, lookup);
         }
 
         /// <summary>
@@ -245,7 +246,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public IEnumerable<String> GetVariables()
         {
-            return null;
+            return Variables;
         }
 
         /// <summary>
@@ -260,7 +261,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override string ToString()
         {
-            return null;
+            return NormalizedFormula;
         }
 
         /// <summary>
