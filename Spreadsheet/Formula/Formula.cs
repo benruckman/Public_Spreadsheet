@@ -99,17 +99,17 @@ namespace SpreadsheetUtilities
             foreach(String currentToken in GetTokens(formula))
             {
                 //beggining 
-                if (prevToken == "(" || isOperator(prevToken))
+                if (prevToken == "(" || IsOperator(prevToken))
                 {
-                    if (currentToken == ")" || isOperator(currentToken))
+                    if (currentToken == ")" || IsOperator(currentToken))
                     {
                         throw new FormulaFormatException("Invalid character following ( or operator");
                     }
                 }
                 
-                if (prevToken == ")" || Double.TryParse(prevToken, out _) || isValid(normalize(prevToken)))
+                if (prevToken == ")" || Double.TryParse(prevToken, out _) || IsVariable(prevToken))
                 {
-                    if (!(isOperator(currentToken) || currentToken == ")"))
+                    if (!(IsOperator(currentToken) || currentToken == ")"))
                     {
                         throw new FormulaFormatException("Invalid character following ) or Variable or Double");
                     }
@@ -122,7 +122,7 @@ namespace SpreadsheetUtilities
                 }
 
                 //handles when operator appears as current token
-                else if (isOperator(currentToken))
+                else if (IsOperator(currentToken))
                 {
                     if (prevToken == "")
                     {
@@ -148,16 +148,11 @@ namespace SpreadsheetUtilities
                         throw new FormulaFormatException("Invalid arrangment of parentheses");
                     }
 
-                    if (prevToken == "")
-                    {
-                        throw new FormulaFormatException(") appear as first character");
-                    }
-
                     NormalizedFormula += currentToken;
                 }
 
                 //handles when variable appears as current token
-                else if (isValid(normalize(currentToken)))
+                else if (IsVariable(currentToken) && isValid(normalize(currentToken)))
                 {
                     NormalizedFormula += normalize(currentToken);
                 }
@@ -181,10 +176,20 @@ namespace SpreadsheetUtilities
                 throw new FormulaFormatException("Must be same number of open and closed parentheses");
             }
 
-            if (isOperator(prevToken) || prevToken == "(")
+            if (IsOperator(prevToken) || prevToken == "(")
             {
                 throw new FormulaFormatException("Formula cannot end with an operator or (");
             }
+        }
+
+        /// <summary>
+        /// helper method for determing if the given string is a variable
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private bool IsVariable (String s)
+        {
+            return Regex.IsMatch(s, "^[a-zA-Z_]+[0-9]+$");
         }
 
         /// <summary>
@@ -192,7 +197,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool isOperator (String s)
+        private bool IsOperator (String s)
         {
             if (s == "+" || s == "-" || s == "*" || s == "/")
             {

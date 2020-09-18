@@ -8,19 +8,19 @@ namespace FormulaEvaluator
 {
     public static class Evaluator
     {
-        public delegate int Lookup(String v);
+        public delegate Double Lookup(String v);
 
         /*
          * Method for evaluating intger arithmetic expressions
          * 
          */
-        public static int Evaluate(String exp, Lookup variableEvaluator)
+        public static Double Evaluate(String exp, Lookup variableEvaluator)
         {
             //Seperate String into Substrings (Code from PS1
             string[] substrings = Regex.Split(exp, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
             //Declare Value and Operator Stack
-            Stack<int> valueStack = new Stack<int>();
+            Stack<Double> valueStack = new Stack<Double>();
             Stack<String> operatorStack = new Stack<String>();
 
             //Iterate through tokens in substring
@@ -29,8 +29,8 @@ namespace FormulaEvaluator
             {
                 currentToken = t.Trim();
 
-                if (!Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$")
-                    && !Regex.IsMatch(currentToken, "^[0-9]+")
+                if (!Regex.IsMatch(currentToken, "^[a-zA-Z_]+[0-9]+$")
+                    && !Double.TryParse(currentToken, out _)
                     && currentToken != "*" && currentToken != "/" && currentToken != "+" 
                     && currentToken != "-" && currentToken != "(" && currentToken != ")" && currentToken != "")
                 {
@@ -42,14 +42,14 @@ namespace FormulaEvaluator
                 }
 
                 //If currentToken is an integer
-                if(Regex.IsMatch(currentToken, "^[0-9]+"))
+                if(Double.TryParse(currentToken, out _))
                 {
-                    IntegerHandler(operatorStack, valueStack, int.Parse(currentToken));
+                    DoubleHandler(operatorStack, valueStack, int.Parse(currentToken));
                 }
                 //If currentToken is a variable
                 else if(Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$"))
                 {
-                    IntegerHandler(operatorStack, valueStack, variableEvaluator(currentToken));
+                    DoubleHandler(operatorStack, valueStack, variableEvaluator(currentToken));
                 }
                 //If currentToken is a + or -
                 else if(currentToken == "+" || currentToken == "-")
@@ -80,8 +80,8 @@ namespace FormulaEvaluator
             }
             else if (operatorStack.Count() == 1 && valueStack.Count() == 2)
             {
-                int term2 = valueStack.Pop();
-                int term1 = valueStack.Pop();
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
                 return SimpleExpressionSolver(term1, term2, operatorStack.Pop());
             }
             else
@@ -97,7 +97,7 @@ namespace FormulaEvaluator
          * operation: String of operation to be applied
          * throws argument expression
          */
-        private static int SimpleExpressionSolver (int term1, int term2, String operation)
+        private static Double SimpleExpressionSolver (Double term1, Double term2, String operation)
         {
             if (operation == "+")
             {
@@ -131,7 +131,7 @@ namespace FormulaEvaluator
          * valueStack: reference to stack containg all of the seen values in expression
          * currentToken
          */
-        private static void IntegerHandler (Stack<String> operatorStack, Stack<int> valueStack, int currentToken)
+        private static void DoubleHandler (Stack<String> operatorStack, Stack<Double> valueStack, Double currentToken)
         {
             if (operatorStack.Count() > 0 && (operatorStack.Peek() == "/" | operatorStack.Peek() == "*"))
             {
@@ -150,26 +150,26 @@ namespace FormulaEvaluator
          * valueStack: reference to stack containg all of the seen values in expression
          * currentToken
          */
-        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<int> valueStack, String currentToken)
+        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<Double> valueStack, String currentToken)
         {
             if (operatorStack.Count() != 0 && (operatorStack.Peek() == "+" | operatorStack.Peek() == "-"))
             {
                 //pop'd in this order to ensure left to right order is maintened
-                int term2 = valueStack.Pop();
-                int term1 = valueStack.Pop();
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
 
             operatorStack.Push(currentToken);
         }
 
-        private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<int> valueStack)
+        private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<Double> valueStack)
         {
             if(operatorStack.Count() > 0 && operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
             {
                 //pop'd in this order to ensure left to right order is maintened
-                int term2 = valueStack.Pop();
-                int term1 = valueStack.Pop();
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
 
@@ -181,8 +181,8 @@ namespace FormulaEvaluator
 
             if(operatorStack.Count() > 0 && (operatorStack.Peek() == "*" | operatorStack.Peek() == "/"))
             {
-                int term2 = valueStack.Pop();
-                int term1 = valueStack.Pop();
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
                 valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
         }
