@@ -1,5 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpreadsheetUtilities;
+using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace FormulaTests
@@ -297,6 +299,60 @@ namespace FormulaTests
         public void CloseParentheseBeginsFormulaTest()
         {
             Formula f = new Formula(")7+8");
+        }
+
+        [TestMethod]
+        public void BasicEvaluateTest()
+        {
+            Formula f = new Formula(" 7 + 8/4 - 2 * 3");
+            Assert.AreEqual(Double.Parse("3"), f.Evaluate(s => 0));
+        }
+
+        [TestMethod]
+        public void AreNotEqualWithVariables()
+        {
+            Assert.IsFalse(new Formula("x1+y2").Equals(new Formula("y2+x1")));
+        }
+
+        [TestMethod]
+        public void AreEqualWithDoublesTest()
+        {
+            Assert.IsTrue(new Formula("2.0 + x7").Equals(new Formula("2.000 + x7")));
+        }
+
+        [TestMethod]
+        public void AreEqualOperatorTest()
+        {
+            Assert.IsTrue(new Formula("2.0 + x7") == new Formula("2.000 + x7"));
+        }
+
+        [TestMethod]
+        public void AreNotEqualOperatorTest()
+        {
+            Assert.IsTrue(new Formula("2.0 + x7") != new Formula("2.001 + x7"));
+        }
+
+        [TestMethod]
+        public void GetVariablesTest()
+        {
+            Formula f = new Formula("a2 - a5 + d4");
+
+            Assert.IsTrue(f.GetVariables().Contains("a2"));
+            Assert.IsTrue(f.GetVariables().Contains("a5"));
+            Assert.IsTrue(f.GetVariables().Contains("d4"));
+        }
+
+        [TestMethod]
+        public void DivideByZeroTest()
+        {
+            Formula f = new Formula("420 / (69 - 69)");
+            f.Evaluate(s => 0);
+        }
+
+        [TestMethod]
+        public void EqualHashCodeTest()
+        {
+            Assert.IsTrue(new Formula("2.0 + x7").GetHashCode() == new Formula("2.000 + x7").GetHashCode());
         }
     }
 }

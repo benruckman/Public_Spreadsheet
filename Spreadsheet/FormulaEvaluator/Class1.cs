@@ -8,7 +8,7 @@ namespace FormulaEvaluator
 {
     public static class Evaluator
     {
-        public delegate Double Lookup(String v);
+        public delegate double Lookup(string v);
 
         /*
          * Method for evaluating intger arithmetic expressions
@@ -187,10 +187,10 @@ namespace FormulaEvaluator
             }
         }
 
-        public static object Evaluate(string normalizedFormula, Func<string, double> lookup)
-        {
-            throw new NotImplementedException();
-        }
+        //public static object Evaluate(string normalizedFormula, Func<string, double> lookup)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 
    

@@ -85,12 +85,13 @@ namespace SpreadsheetUtilities
         /// </summary>
         /// 
 
-        private List <String> Variables;
+        private List<string> Variables;
 
         private String NormalizedFormula;
 
         public Formula(String formula, Func<string, string> normalize, Func<string, bool> isValid)
         {
+            Variables = new List<string>();
             Double currentDouble;
             int numOpenParenthese = 0;
             int numClosedParentese = 0;
@@ -108,7 +109,7 @@ namespace SpreadsheetUtilities
                     }
                 }
                 
-                if (prevToken == ")" || Double.TryParse(prevToken, out _) || IsVariable(prevToken))
+                if (prevToken == ")" || Double.TryParse(prevToken, out _) || IsVariable(prevToken, normalize, isValid))
                 {
                     if (!(IsOperator(currentToken) || currentToken == ")"))
                     {
@@ -153,9 +154,10 @@ namespace SpreadsheetUtilities
                 }
 
                 //handles when variable appears as current token
-                else if (IsVariable(currentToken) && isValid(normalize(currentToken)))
+                else if (IsVariable(currentToken, normalize, isValid))
                 {
                     NormalizedFormula += normalize(currentToken);
+                    Variables.Add(normalize(currentToken));
                 }
 
                 //handles when an invalid token appears as current token
@@ -188,9 +190,9 @@ namespace SpreadsheetUtilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool IsVariable (String s)
+        private bool IsVariable (String s, Func<string, string> normalize, Func<string, bool> isValid)
         {
-            return Regex.IsMatch(s, "^[a-zA-Z_]+[0-9]+$");
+            return Regex.IsMatch(s, "^[a-zA-Z_]+[0-9]+$") && isValid(normalize(s));
         }
 
         /// <summary>
@@ -230,7 +232,14 @@ namespace SpreadsheetUtilities
         /// </summary>
         public object Evaluate(Func<string, double> lookup)
         {
-            return Evaluator.Evaluate(NormalizedFormula, lookup);
+            try
+            {
+                return Evaluator.Evaluate(NormalizedFormula, new FormulaEvaluator.Evaluator.Lookup(lookup));
+            }
+            catch (ArgumentException e)
+            {
+                return new FormulaError("Divide By Zero Occured");
+            }
         }
 
         /// <summary>
@@ -286,7 +295,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override bool Equals(object obj)
         {
-            return false;
+            return NormalizedFormula == obj.ToString();
         }
 
         /// <summary>
@@ -296,7 +305,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public static bool operator ==(Formula f1, Formula f2)
         {
-            return false;
+            return f1.Equals(f2);
         }
 
         /// <summary>
@@ -306,7 +315,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public static bool operator !=(Formula f1, Formula f2)
         {
-            return false;
+            return !f1.Equals(f2);
         }
 
         /// <summary>
@@ -316,7 +325,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override int GetHashCode()
         {
-            return 0;
+            return NormalizedFormula.GetHashCode();
         }
 
         /// <summary>
