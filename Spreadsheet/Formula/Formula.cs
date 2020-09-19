@@ -234,11 +234,166 @@ namespace SpreadsheetUtilities
         {
             try
             {
-                return Evaluator.Evaluate(NormalizedFormula, new FormulaEvaluator.Evaluator.Lookup(lookup));
+                return EvaluateHelper(NormalizedFormula, lookup);
             }
             catch (ArgumentException e)
             {
                 return new FormulaError("Divide By Zero Occured");
+            }
+        }
+
+        /// <summary>
+        /// Helper Method for Evaluating Expression, this is the code copied and modified from PS1
+        /// </summary>
+        /// <param name="exp"></param>
+        /// <param name="lookup"></param>
+        /// <returns></returns>
+        private static Double EvaluateHelper(string exp, Func<string, double> lookup)
+        {
+            //Seperate String into Substrings (Code from PS1
+            string[] substrings = Regex.Split(exp, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
+
+            //Declare Value and Operator Stack
+            Stack<Double> valueStack = new Stack<Double>();
+            Stack<String> operatorStack = new Stack<String>();
+
+            //Iterate through tokens in substring
+            String currentToken;
+            foreach (String t in substrings)
+            {
+                currentToken = t.Trim();
+
+                //If currentToken is an integer
+                if (Double.TryParse(currentToken, out _))
+                {
+                    DoubleHandler(operatorStack, valueStack, int.Parse(currentToken));
+                }
+                //If currentToken is a variable
+                else if (Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$"))
+                {
+                    DoubleHandler(operatorStack, valueStack, lookup(currentToken));
+                }
+                //If currentToken is a + or -
+                else if (currentToken == "+" || currentToken == "-")
+                {
+                    AdditionSubtractionHandler(operatorStack, valueStack, currentToken);
+                }
+                //If currentToken is * or /
+                else if (currentToken == "*" | currentToken == "/")
+                {
+                    operatorStack.Push(currentToken);
+                }
+                //If currentToken is a (
+                else if (currentToken == "(")
+                {
+                    operatorStack.Push(currentToken);
+                }
+                //If currentToken is a )
+                else if (currentToken == ")")
+                {
+                    ClosedParenthesesHandler(operatorStack, valueStack);
+                }
+            }
+
+            //After every token has been gone through
+            if (operatorStack.Count() == 0)
+            {
+                return valueStack.Pop();
+            }
+            else
+            {
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
+                return SimpleExpressionSolver(term1, term2, operatorStack.Pop());
+            }
+        }
+
+        /*
+         * Solves arithmetic expressions with two values and one operator
+         * term1: left term in expression
+         * term2: right term in expression
+         * operation: String of operation to be applied
+         * throws argument expression
+         */
+        private static Double SimpleExpressionSolver(Double term1, Double term2, String operation)
+        {
+            if (operation == "+")
+            {
+                return term1 + term2;
+            }
+            else if (operation == "-")
+            {
+                return term1 - term2;
+            }
+            else if (operation == "*")
+            {
+                return term1 * term2;
+            }
+            else
+            {
+                if (term2 == 0)
+                {
+                    throw new ArgumentException("Invalid Expression cant divide by 0");
+                }
+                return term1 / term2;
+            }
+        }
+
+        /*
+         * Handles algorithm when current token is an integer
+         * operatorStack: reference to stack containing all of the seen operators in expression
+         * valueStack: reference to stack containg all of the seen values in expression
+         * currentToken
+         */
+        private static void DoubleHandler(Stack<String> operatorStack, Stack<Double> valueStack, Double currentToken)
+        {
+            if (operatorStack.Count() > 0 && (operatorStack.Peek() == "/" | operatorStack.Peek() == "*"))
+            {
+
+                valueStack.Push(SimpleExpressionSolver(valueStack.Pop(), currentToken, operatorStack.Pop()));
+            }
+            else
+            {
+                valueStack.Push(currentToken);
+            }
+        }
+
+        /*
+         * Handles algorithm when current token is either + or -
+         * operatorStack: reference to stack containing all of the seen operators in expression
+         * valueStack: reference to stack containg all of the seen values in expression
+         * currentToken
+         */
+        private static void AdditionSubtractionHandler(Stack<String> operatorStack, Stack<Double> valueStack, String currentToken)
+        {
+            if (operatorStack.Count() != 0 && (operatorStack.Peek() == "+" | operatorStack.Peek() == "-"))
+            {
+                //pop'd in this order to ensure left to right order is maintened
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
+            }
+
+            operatorStack.Push(currentToken);
+        }
+
+        private static void ClosedParenthesesHandler(Stack<String> operatorStack, Stack<Double> valueStack)
+        {
+            if (operatorStack.Count() > 0 && operatorStack.Peek() == "+" | operatorStack.Peek() == "-")
+            {
+                //pop'd in this order to ensure left to right order is maintened
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
+            }
+
+            operatorStack.Pop();
+
+            if (operatorStack.Count() > 0 && (operatorStack.Peek() == "*" | operatorStack.Peek() == "/"))
+            {
+                Double term2 = valueStack.Pop();
+                Double term1 = valueStack.Pop();
+                valueStack.Push(SimpleExpressionSolver(term1, term2, operatorStack.Pop()));
             }
         }
 

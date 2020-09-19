@@ -345,7 +345,7 @@ namespace FormulaTests
         [TestMethod]
         public void DivideByZeroTest()
         {
-            Formula f = new Formula("420 / (69 - 69)");
+            Formula f = new Formula("420 / 0");
             f.Evaluate(s => 0);
         }
 
@@ -353,6 +353,96 @@ namespace FormulaTests
         public void EqualHashCodeTest()
         {
             Assert.IsTrue(new Formula("2.0 + x7").GetHashCode() == new Formula("2.000 + x7").GetHashCode());
+        }
+
+        [TestMethod]
+        public void ClosedParenthesesMultiplyTest()
+        {
+            Formula f = new Formula("(2 + 6) * 3");
+            Assert.AreEqual(Double.Parse("24"), f.Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("9")]
+        public void TestLeftToRight()
+        {
+            Assert.AreEqual(Double.Parse("15"), new Formula ("2*6+3").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("10")]
+        public void TestOrderOperations()
+        {
+            Assert.AreEqual(Double.Parse("20"), new Formula("2+6*3").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("11")]
+        public void TestParenthesesTimes()
+        {
+            Assert.AreEqual(Double.Parse("24"), new Formula("(2+6)*3").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("12")]
+        public void TestTimesParentheses()
+        {
+            Assert.AreEqual(Double.Parse("16"), new Formula("2*(3+5)").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("13")]
+        public void TestPlusParentheses()
+        {
+            Assert.AreEqual(Double.Parse("10"), new Formula("2+(3+5)").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("14")]
+        public void TestPlusComplex()
+        {
+            Assert.AreEqual(Double.Parse("50"), new Formula("2+(3+5*9)").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("15")]
+        public void TestOperatorAfterParens()
+        {
+            Assert.AreEqual(Double.Parse("0"), new Formula("(1*1)-2/2").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("16")]
+        public void TestComplexTimesParentheses()
+        {
+            Assert.AreEqual(Double.Parse("26"), new Formula("2+3*(3+5)").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("17")]
+        public void TestComplexAndParentheses()
+        {
+            Assert.AreEqual(Double.Parse("194"), new Formula("2+3*5+(3+4*8)*5+2").Evaluate(s => 0));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("27")]
+        public void TestComplexNestedParensRight()
+        {
+            Assert.AreEqual(Double.Parse("6"), new Formula("x1+(x2+(x3+(x4+(x5+x6))))").Evaluate(s => 1));
+        }
+
+        [TestMethod(), Timeout(5000)]
+        [TestCategory("28")]
+        public void TestComplexNestedParensLeft()
+        {
+            Assert.AreEqual(Double.Parse("12"), new Formula("((((x1+x2)+x3)+x4)+x5)+x6").Evaluate(s => 2));
+        }
+
+        [TestMethod]
+        public void TestRepeatedVar()
+        {
+            Assert.AreEqual(Double.Parse("0"), new Formula("a4-a4*a4/a4").Evaluate(s => 3));
         }
     }
 }
