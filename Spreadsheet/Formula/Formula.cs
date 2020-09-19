@@ -16,8 +16,6 @@
 //  (Version 1.2) Changed the definition of equality with regards
 //                to numeric tokens
 
-
-using FormulaEvaluator;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
