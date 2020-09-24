@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SpreadsheetUtilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -25,7 +26,7 @@ namespace FormulaTests
         [ExpectedException(typeof(FormulaFormatException))]
         public void InvalidCharacterInFormulaTest()
         {
-            Formula f = new Formula("4+3*2-s");
+            Formula f = new Formula("4+3*2-3s");
         }
 
         [TestMethod]
@@ -645,7 +646,7 @@ namespace FormulaTests
 
         [TestMethod(), Timeout(2000)]
         [TestCategory("53")]
-        public void TestRepeatedVar()
+        public void TestRepeatedVarTeacherTest()
         {
             Formula f = new Formula("a4-a4*a4/a4");
             Assert.AreEqual(0, (double)f.Evaluate(s => 3), 1e-9);

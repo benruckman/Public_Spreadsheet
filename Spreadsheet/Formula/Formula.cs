@@ -190,7 +190,7 @@ namespace SpreadsheetUtilities
         /// <returns></returns>
         private bool IsVariable (String s, Func<string, string> normalize, Func<string, bool> isValid)
         {
-            return Regex.IsMatch(s, "^[a-zA-Z_]+[0-9]+$") && isValid(normalize(s));
+            return Regex.IsMatch(s, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") && isValid(normalize(s));
         }
 
         /// <summary>
@@ -448,7 +448,12 @@ namespace SpreadsheetUtilities
         /// </summary>
         public override bool Equals(object obj)
         {
-            return NormalizedFormula == obj.ToString();
+            if (obj == null)
+            {
+                return false;
+            }
+
+            return NormalizedFormula.Equals(obj.ToString());
         }
 
         /// <summary>
@@ -458,7 +463,16 @@ namespace SpreadsheetUtilities
         /// </summary>
         public static bool operator ==(Formula f1, Formula f2)
         {
-            return f1.Equals(f2);
+            if(f1 == null && f2 == null)
+            {
+                return true;
+            }
+            else if (f1 == null | f2 == null)
+            {
+                return false;
+            }
+
+            return f1.ToString().Equals(f2.ToString());
         }
 
         /// <summary>
