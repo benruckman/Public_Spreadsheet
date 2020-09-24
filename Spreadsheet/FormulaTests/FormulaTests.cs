@@ -686,7 +686,7 @@ namespace FormulaTests
         {
             Formula f1 = new Formula("1e-2 + X5 + 17.00 * 19 ");
             Formula f2 = new Formula("   0.0100  +     X5+ 17 * 19.00000 ");
-            Assert.IsTrue(f1.Equals(f2));
+            Assert.IsTrue(f1 == f2);
         }
 
 

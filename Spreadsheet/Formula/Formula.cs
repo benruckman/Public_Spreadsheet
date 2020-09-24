@@ -155,7 +155,11 @@ namespace SpreadsheetUtilities
                 else if (IsVariable(currentToken, normalize, isValid))
                 {
                     NormalizedFormula += normalize(currentToken);
-                    Variables.Add(normalize(currentToken));
+                    if (!Variables.Contains(normalize(currentToken)))
+                    {
+                        Variables.Add(normalize(currentToken));
+                    }
+                    
                 }
 
                 //handles when an invalid token appears as current token
@@ -463,16 +467,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         public static bool operator ==(Formula f1, Formula f2)
         {
-            if(f1 == null && f2 == null)
-            {
-                return true;
-            }
-            else if (f1 == null | f2 == null)
-            {
-                return false;
-            }
-
-            return f1.ToString().Equals(f2.ToString());
+            return Equals(f1, f2) && f1.ToString().Equals(f2.ToString());
         }
 
         /// <summary>
