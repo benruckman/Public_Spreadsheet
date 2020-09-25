@@ -16,16 +16,6 @@ namespace SpreadsheetUtilities
             this.contents = contents;
         }
 
-        public void SetName (string name)
-        {
-            this.name = name;
-        }
-
-        public string GetName()
-        {
-            return name;
-        }
-
         public void SetContents (object contents)
         {
             this.contents = contents;

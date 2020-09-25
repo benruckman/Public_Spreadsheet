@@ -30,34 +30,51 @@ namespace SS
 
         public override IEnumerable<string> GetNamesOfAllNonemptyCells()
         {
-            throw new NotImplementedException();
+            foreach (string s in namedCells.Keys)
+            {
+                if (!GetCellContents(s).Equals(""))
+                {
+                    yield return s;
+                }
+            }
         }
 
         public override IList<string> SetCellContents(string name, double number)
         {
-            throw new NotImplementedException();
+            return SetCellHelper(name, number);
         }
 
         public override IList<string> SetCellContents(string name, string text)
         {
-            IsValidNameAndContents(name, text);
+            return SetCellHelper(name, text);
+        }
+
+        /// <summary>
+        /// Helper method for assigning Cell contents when contents will not introduce new dependency relationships
+        /// This method handles removing existing dependencies
+        /// </summary>
+        private IList<string> SetCellHelper (string name, object contents)
+        {
+            //check for valid name and content
+            IsValidNameAndContents(name, contents);
             //intialize list that will be returned
             List<string> cellsToRecalculate = new List<string>();
+
+            if (!namedCells.ContainsKey(name))
+            {
+                namedCells.Add(name, new Cell(name, contents));
+            }
+            else
+            {
+                namedCells[name].SetContents(contents);
+                dependencyGraph.ReplaceDependees(name, new List<string>());
+            }
+
             //check for circular dependencies, 
             //iterate through each cell name that needs to be recalculated and add it to list
             foreach (string s in GetCellsToRecalculate(name))
             {
                 cellsToRecalculate.Add(s);
-            }
-
-            if (!namedCells.ContainsKey(name))
-            {
-                namedCells.Add(name, new Cell(name, text));
-            }
-            else
-            {
-                namedCells[name].SetContents(text);
-                dependencyGraph.ReplaceDependees(name, new List<string>());
             }
 
             return cellsToRecalculate;
@@ -65,24 +82,27 @@ namespace SS
 
         public override IList<string> SetCellContents(string name, Formula formula)
         {
+     
             IsValidNameAndContents(name, formula);
             //intialize list that will be returned
             List<string> cellsToRecalculate = new List<string>();
-            //check for circular dependencies, 
-            //iterate through each cell name that needs to be recalculated and add it to list
-            foreach (string s in GetCellsToRecalculate(name))
-            {
-                cellsToRecalculate.Add(s);
-            }
 
             //if the cell has not already been named (and thus does not exist in namedCells)
             //Add new cell containing a formula
             //Dependencies will also be added to the dependency graph
+            IEnumerable<string> prevDependees = new List<string>();
+            prevDependees = dependencyGraph.GetDependees(name);
+            IEnumerable<string> prevDependents = new List<string>();
+            prevDependents = dependencyGraph.GetDependents(name);
+
+            object prevCellContent = GetCellContents(name);
+
             if (!namedCells.ContainsKey(name))
             {
                 namedCells.Add(name, new Cell(name, formula));
                 foreach (string n in formula.GetVariables())
                 {
+
                     dependencyGraph.AddDependency(n, name);
                 }
             }
@@ -93,7 +113,40 @@ namespace SS
                 dependencyGraph.ReplaceDependees(name, formula.GetVariables());
             }
 
-            return cellsToRecalculate;
+            try
+            {
+                //check for circular dependencies, 
+                //iterate through each cell name that needs to be recalculated and add it to list
+                foreach (string s in GetCellsToRecalculate(name))
+                {
+                    cellsToRecalculate.Add(s);
+                }
+
+                return cellsToRecalculate;
+            }
+            catch (CircularException)
+            {
+                if (prevCellContent.Equals(""))
+                {
+                    namedCells.Remove(name);
+                    dependencyGraph.ReplaceDependees(name, prevDependees);
+                    dependencyGraph.ReplaceDependents(name, prevDependents);
+                }
+                else
+                {
+                    //if cell contents were empty before, replace old dependees with new ones
+                    dependencyGraph.ReplaceDependees(name, prevDependees);
+                    dependencyGraph.ReplaceDependents(name, prevDependents);
+                    namedCells[name].SetContents(prevCellContent);
+                }
+
+                foreach (string n in formula.GetVariables())
+                {
+                    dependencyGraph.RemoveDependency(n, name);
+                }
+
+                throw new CircularException();
+            }
         }
 
         /// <summary>
