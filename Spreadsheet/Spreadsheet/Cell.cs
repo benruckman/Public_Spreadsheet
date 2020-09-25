@@ -16,22 +16,22 @@ namespace SpreadsheetUtilities
             this.contents = contents;
         }
 
-        public void setName (string name)
+        public void SetName (string name)
         {
             this.name = name;
         }
 
-        public string getName()
+        public string GetName()
         {
             return name;
         }
 
-        public void setContents (object contents)
+        public void SetContents (object contents)
         {
             this.contents = contents;
         }
 
-        public object getContents ()
+        public object GetContents ()
         {
             return contents;
         }

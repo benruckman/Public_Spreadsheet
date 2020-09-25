@@ -41,15 +41,62 @@ namespace SpreadsheetTests
         public void SetCellInvalidNameFormula()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("3f", new Formula("2 + 2", s => s, s => true));
+            ss.SetCellContents("3f", new Formula("2 + 2"));
         }
 
-        //DELETE ME ONCE FINISIHED
         [TestMethod]
-        public void test ()
+        public void SetCellContentsFormulaNoDependencies()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", new Formula("B1 + 2", s => s, s => true));
+            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
+        }
+
+        [TestMethod]
+        public void SetCellContentsFormulaSeperateChains1()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("2 + 2")).Count());
+        }
+
+        [TestMethod]
+        public void SetCellContentsFormulaOneDependency()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("A1")).Count());
+            Assert.AreEqual(2, ss.SetCellContents("A1", new Formula("5 - 7")).Count());
+        }
+
+        [TestMethod]
+        public void SetCellContentsChangingMultipleDependenciesToNone()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("1")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("5")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("C1", new Formula("A1 + B1")).Count());
+            Assert.AreEqual(2, ss.SetCellContents("A1", new Formula("5")).Count());
+            Assert.AreEqual(2, ss.SetCellContents("B1", new Formula("1")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("C1", new Formula("5")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("5")).Count());
+            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("1")).Count());
+        }
+
+        [TestMethod]
+        public void SetCellContentsString()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual(1, ss.SetCellContents("A1", "test").Count());
+        }
+
+        [TestMethod]
+        public void SetCellContentsChangningFromDependentFormula()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
+            Assert.IsTrue(ss.SetCellContents("B1", new Formula("A1")).Contains("B1"));
+            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
+            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("B1"));
         }
     }
 

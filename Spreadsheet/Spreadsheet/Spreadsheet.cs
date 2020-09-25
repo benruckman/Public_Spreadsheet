@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,7 +21,11 @@ namespace SS
 
         public override object GetCellContents(string name)
         {
-            throw new NotImplementedException();
+            if (namedCells.ContainsKey(name))
+            {
+                return namedCells[name].GetContents();
+            }
+            else return "";
         }
 
         public override IEnumerable<string> GetNamesOfAllNonemptyCells()
@@ -35,20 +40,41 @@ namespace SS
 
         public override IList<string> SetCellContents(string name, string text)
         {
-            throw new NotImplementedException();
+            IsValidNameAndContents(name, text);
+            //intialize list that will be returned
+            List<string> cellsToRecalculate = new List<string>();
+            //check for circular dependencies, 
+            //iterate through each cell name that needs to be recalculated and add it to list
+            foreach (string s in GetCellsToRecalculate(name))
+            {
+                cellsToRecalculate.Add(s);
+            }
+
+            if (!namedCells.ContainsKey(name))
+            {
+                namedCells.Add(name, new Cell(name, text));
+            }
+            else
+            {
+                namedCells[name].SetContents(text);
+                dependencyGraph.ReplaceDependees(name, new List<string>());
+            }
+
+            return cellsToRecalculate;
         }
 
         public override IList<string> SetCellContents(string name, Formula formula)
         {
-            //make sure provided arguments are valid
-            if (formula is null)
+            IsValidNameAndContents(name, formula);
+            //intialize list that will be returned
+            List<string> cellsToRecalculate = new List<string>();
+            //check for circular dependencies, 
+            //iterate through each cell name that needs to be recalculated and add it to list
+            foreach (string s in GetCellsToRecalculate(name))
             {
-                throw new ArgumentNullException("Formula cannot be null");
+                cellsToRecalculate.Add(s);
             }
-            if (name is null || !Regex.IsMatch(name, "^[a-dA-D_]([a-dA-D_]|\\d)*$"))
-            {
-                throw new InvalidNameException();
-            }
+
             //if the cell has not already been named (and thus does not exist in namedCells)
             //Add new cell containing a formula
             //Dependencies will also be added to the dependency graph
@@ -60,22 +86,41 @@ namespace SS
                     dependencyGraph.AddDependency(n, name);
                 }
             }
-            //
+            //If cell already exists, reassign its contents
             else
             {
-                namedCells[name].setContents(formula);
+                namedCells[name].SetContents(formula);
                 dependencyGraph.ReplaceDependees(name, formula.GetVariables());
             }
 
-            return null;
+            return cellsToRecalculate;
+        }
 
+        /// <summary>
+        /// Helper Method, throws if invalid name or contents are provided
+        /// </summary>
+        private void IsValidNameAndContents(string name, Object obj)
+        {
+            //make sure provided arguments are valid
+            if (obj is null)
+            {
+                throw new ArgumentNullException("Formula cannot be null");
+            }
+            IsValidName(name);
+        }
 
+        private void IsValidName (string name)
+        { 
+            if (name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$"))
+            {
+                throw new InvalidNameException();
+            }
         }
 
 
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
-
+            return dependencyGraph.GetDependents(name);
         }
     }
 }
