@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormulaEvaluator", "FormulaEvaluator\FormulaEvaluator.csproj", "{AEA8724A-CCFC-412B-8B69-8D198AB64229}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormulaEvaluatorConsoleTester", "FormulaEvaluatorConsoleTester\FormulaEvaluatorConsoleTester.csproj", "{6EB2F372-2EAF-471F-B6E8-B401EDE6ED7A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyGraphTests", "DependencyGraphTests\DependencyGraphTests.csproj", "{28A6ED6F-67B2-4367-9EDE-E2F7F7C6ED5F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyGraph", "DependencyGraph\DependencyGraph.csproj", "{6118B7ED-DD57-4376-86FB-4372BEB4AC17}"
@@ -19,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FormulaTests", "FormulaTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheet", "Spreadsheet\Spreadsheet.csproj", "{78D4E33B-2D07-4DE8-A717-6A60A58A4E35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{8C2B5954-1278-4DBD-BC25-7B004209B6AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{8C2B5954-1278-4DBD-BC25-7B004209B6AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TipCalculator", "TipCalculator\TipCalculator.csproj", "{0A505D87-DC75-412E-9CA4-512A0CD15CCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +31,6 @@ Global
 		{AEA8724A-CCFC-412B-8B69-8D198AB64229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA8724A-CCFC-412B-8B69-8D198AB64229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA8724A-CCFC-412B-8B69-8D198AB64229}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EB2F372-2EAF-471F-B6E8-B401EDE6ED7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EB2F372-2EAF-471F-B6E8-B401EDE6ED7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EB2F372-2EAF-471F-B6E8-B401EDE6ED7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EB2F372-2EAF-471F-B6E8-B401EDE6ED7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28A6ED6F-67B2-4367-9EDE-E2F7F7C6ED5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{28A6ED6F-67B2-4367-9EDE-E2F7F7C6ED5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28A6ED6F-67B2-4367-9EDE-E2F7F7C6ED5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,6 +59,10 @@ Global
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
