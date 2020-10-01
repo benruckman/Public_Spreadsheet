@@ -55,7 +55,7 @@ namespace SpreadsheetTests
         public void SetCellContentsFormulaSeperateChains1()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=2 + 2").Count()) ;
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=2 + 2").Count());
             Assert.AreEqual(1, ss.SetContentsOfCell("B1", "=2 + 2").Count());
         }
 
@@ -116,8 +116,8 @@ namespace SpreadsheetTests
             Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("A1"));
             Assert.IsTrue(ss.SetContentsOfCell("B1", "=A1").Contains("B1"));
             Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("A1"));
-            Assert.IsTrue(ss.SetContentsOfCell("A1","=5").Contains("B1"));
-            Assert.IsTrue(ss.SetContentsOfCell("B1","2.000").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1", "2.000").Contains("B1"));
             Assert.IsFalse(ss.SetContentsOfCell("A1", "=5").Contains("B1"));
         }
 
@@ -150,7 +150,7 @@ namespace SpreadsheetTests
             Spreadsheet ss = new Spreadsheet();
             ss.SetContentsOfCell("A1", "text");
             ss.SetContentsOfCell("B3", "text");
-            ss.SetContentsOfCell("X2","6.90");
+            ss.SetContentsOfCell("X2", "6.90");
             ss.SetContentsOfCell("G6", "=400 + 20");
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("A1"));
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("B3"));
@@ -213,6 +213,94 @@ namespace SpreadsheetTests
             Assert.IsTrue(ss.SetContentsOfCell("B1", "2").Contains("A1"));
         }
 
+        //Tests added for PS5 are below
+
+        [TestMethod]
+        public void IsValidWorksCorrectlyTest()
+        {
+            Spreadsheet ss = new Spreadsheet(s => s == "A1", s => s, "default");
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "test").Contains("A1"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
+        public void IsValidFailsAnInvalidNameTest()
+        {
+            Spreadsheet ss = new Spreadsheet(s => s == "A1", s => s, "default");
+            ss.SetContentsOfCell("B1", "test");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
+        public void InvalidNameTest1()
+        {
+            Spreadsheet ss = new Spreadsheet(s => s == "A1", s => s, "default");
+            ss.SetContentsOfCell("B", "test");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
+        public void InvalidNameTest2()
+        {
+            Spreadsheet ss = new Spreadsheet(s => s == "A1", s => s, "default");
+            ss.SetContentsOfCell("B2B", "test");
+        }
+
+        [TestMethod]
+        public void SimpleNormalizeTest()
+        {
+            Spreadsheet ss = new Spreadsheet(s => true, s => s.ToUpper(), "default");
+            Assert.IsTrue(ss.SetContentsOfCell("b2", "test").Contains("B2"));
+            Assert.IsTrue(ss.SetContentsOfCell("ab12", "test").Contains("AB12"));
+        }
+
+        [TestMethod]
+        public void HasNotChangedTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.IsFalse(ss.Changed);
+        }
+
+        [TestMethod]
+        public void HasChangedTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "test");
+            Assert.IsTrue(ss.Changed);
+        }
+
+        [TestMethod]
+        public void HasNotChangedAfterSaveTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "test");
+            ss.Save("testFile.xml");
+            Assert.IsFalse(ss.Changed);
+        }
+
+        [TestMethod]
+        public void HasChangedAfterSaveTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "test");
+            ss.Save("testFile.xml");
+            ss.SetContentsOfCell("B1", "testetstset");
+            Assert.IsTrue(ss.Changed);
+        }
+
+        [TestMethod]
+        public void VersionIsDefaultInEmptyConstructorTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual("default", ss.Version);
+        }
+
+        [TestMethod]
+        public void CorrectVersionWhenDefinedTest()
+        {
+            Spreadsheet ss = new Spreadsheet(s => true, s => s, "420");
+            Assert.AreEqual("420", ss.Version);
+        }
     }
 
 
