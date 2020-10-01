@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,7 +15,15 @@ namespace SS
         private DependencyGraph dependencyGraph;
         private Dictionary<string, Cell> namedCells;
 
-        public Spreadsheet ()
+        public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+
+        public Spreadsheet () : base (s => true, s => s, "default")
+        {
+            dependencyGraph = new DependencyGraph();
+            namedCells = new Dictionary<string, Cell>();
+        }
+
+        public Spreadsheet(Func<string, bool> IsValid, Func<string, string> normalize, string version) : base (IsValid, normalize, version)
         {
             dependencyGraph = new DependencyGraph();
             namedCells = new Dictionary<string, Cell>();
@@ -44,12 +53,12 @@ namespace SS
             }
         }
 
-        public override IList<string> SetCellContents(string name, double number)
+        protected override IList<string> SetCellContents(string name, double number)
         {
             return SetCellHelper(name, number);
         }
 
-        public override IList<string> SetCellContents(string name, string text)
+        protected override IList<string> SetCellContents(string name, string text)
         {
             return SetCellHelper(name, text);
         }
@@ -85,7 +94,7 @@ namespace SS
             return cellsToRecalculate;
         }
 
-        public override IList<string> SetCellContents(string name, Formula formula)
+       protected override IList<string> SetCellContents(string name, Formula formula)
         {
      
             IsValidNameAndContents(name, formula);
@@ -179,6 +188,26 @@ namespace SS
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
             return dependencyGraph.GetDependents(name);
+        }
+
+        public override string GetSavedVersion(string filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Save(string filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object GetCellValue(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IList<string> SetContentsOfCell(string name, string content)
+        {
+            throw new NotImplementedException();
         }
     }
 }
