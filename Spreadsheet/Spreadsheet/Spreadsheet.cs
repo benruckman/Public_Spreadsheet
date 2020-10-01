@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,6 +22,10 @@ namespace SS
 
         public override object GetCellContents(string name)
         {
+            if(name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$"))
+            {
+                throw new InvalidNameException();
+            }
             if (namedCells.ContainsKey(name))
             {
                 return namedCells[name].GetContents();
