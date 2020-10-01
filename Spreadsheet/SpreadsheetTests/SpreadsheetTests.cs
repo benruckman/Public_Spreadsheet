@@ -23,8 +23,7 @@ namespace SpreadsheetTests
         public void SetCellWithNullFormula()
         {
             Spreadsheet spreadsheet = new Spreadsheet();
-            Formula formula = null;
-            spreadsheet.SetCellContents("A1", formula);
+            spreadsheet.SetContentsOfCell("A1", null);
 
         }
 
@@ -34,7 +33,7 @@ namespace SpreadsheetTests
         {
             Spreadsheet ss = new Spreadsheet();
             string name = null;
-            ss.SetCellContents(name, new Formula("2 - 2"));
+            ss.SetContentsOfCell(name, "=2 - 2");
         }
 
         [TestMethod]
@@ -42,91 +41,91 @@ namespace SpreadsheetTests
         public void SetCellInvalidNameFormula()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("3f", new Formula("2 + 2"));
+            ss.SetContentsOfCell("3f", "=2 + 2");
         }
 
         [TestMethod]
         public void SetCellContentsFormulaNoDependencies()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=2 + 2").Count());
         }
 
         [TestMethod]
         public void SetCellContentsFormulaSeperateChains1()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("2 + 2")).Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=2 + 2").Count()) ;
+            Assert.AreEqual(1, ss.SetContentsOfCell("B1", "=2 + 2").Count());
         }
 
         [TestMethod]
         public void SetCellContentsFormulaOneDependency()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("2 + 2")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("A1")).Count());
-            Assert.AreEqual(2, ss.SetCellContents("A1", new Formula("5 - 7")).Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=2 + 2").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("B1", "=A1").Count());
+            Assert.AreEqual(2, ss.SetContentsOfCell("A1", "=5 - 7").Count());
         }
 
         [TestMethod]
         public void SetCellContentsChangingMultipleDependenciesToNone()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("1")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("5")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("C1", new Formula("A1 + B1")).Count());
-            Assert.AreEqual(2, ss.SetCellContents("A1", new Formula("5")).Count());
-            Assert.AreEqual(2, ss.SetCellContents("B1", new Formula("1")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("C1", new Formula("5")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("A1", new Formula("5")).Count());
-            Assert.AreEqual(1, ss.SetCellContents("B1", new Formula("1")).Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=1").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("B1", "=5").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("C1", "=A1 + B1").Count());
+            Assert.AreEqual(2, ss.SetContentsOfCell("A1", "=5").Count());
+            Assert.AreEqual(2, ss.SetContentsOfCell("B1", "=1").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("C1", "=5").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "=5").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("B1", "=1").Count());
         }
 
         [TestMethod]
         public void SetCellContentsString()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.AreEqual(1, ss.SetCellContents("A1", "test").Count());
+            Assert.AreEqual(1, ss.SetContentsOfCell("A1", "test").Count());
         }
 
         [TestMethod]
         public void SetCellContentsChangningFromDependentFormulaToString()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
-            Assert.IsTrue(ss.SetCellContents("B1", new Formula("A1")).Contains("B1"));
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("B1"));
-            Assert.IsTrue(ss.SetCellContents("B1", "text").Contains("B1"));
-            Assert.IsFalse(ss.SetCellContents("A1", new Formula("5")).Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "5").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1", "=A1").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1", "text").Contains("B1"));
+            Assert.IsFalse(ss.SetContentsOfCell("A1", "=5").Contains("B1"));
         }
 
         [TestMethod]
         public void SimpleDoubleTest()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.IsTrue(ss.SetCellContents("A1", Double.Parse("2.000")).Contains("A1"));
-            Assert.AreEqual(1, (ss.SetCellContents("A1", Double.Parse("2.000")).Count()));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "2.000").Contains("A1"));
+            Assert.AreEqual(1, (ss.SetContentsOfCell("A1", "2.000").Count()));
         }
 
         [TestMethod]
         public void SetCellContentsChangningFromDependentFormulaToDouble()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
-            Assert.IsTrue(ss.SetCellContents("B1", new Formula("A1")).Contains("B1"));
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("A1"));
-            Assert.IsTrue(ss.SetCellContents("A1", new Formula("5")).Contains("B1"));
-            Assert.IsTrue(ss.SetCellContents("B1", Double.Parse("2.000")).Contains("B1"));
-            Assert.IsFalse(ss.SetCellContents("A1", new Formula("5")).Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1", "=A1").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "=5").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1","=5").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1","2.000").Contains("B1"));
+            Assert.IsFalse(ss.SetContentsOfCell("A1", "=5").Contains("B1"));
         }
 
         [TestMethod]
         public void GetCellContentsTest()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.IsTrue(ss.SetCellContents("A1", "text").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "text").Contains("A1"));
             Assert.IsTrue(ss.GetCellContents("A1").Equals("text"));
         }
 
@@ -134,7 +133,7 @@ namespace SpreadsheetTests
         public void GetEmptyCellContentsTest()
         {
             Spreadsheet ss = new Spreadsheet();
-            Assert.IsTrue(ss.SetCellContents("A1", "").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "").Contains("A1"));
             Assert.IsTrue(ss.GetCellContents("A1").Equals(""));
         }
 
@@ -149,10 +148,10 @@ namespace SpreadsheetTests
         public void SimpleGetNamesOfAllNonEmptyCells()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", "text");
-            ss.SetCellContents("B3", "text");
-            ss.SetCellContents("X2", Double.Parse("6.90"));
-            ss.SetCellContents("G6", new Formula("400 + 20"));
+            ss.SetContentsOfCell("A1", "text");
+            ss.SetContentsOfCell("B3", "text");
+            ss.SetContentsOfCell("X2","6.90");
+            ss.SetContentsOfCell("G6", "=400 + 20");
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("A1"));
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("B3"));
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("X2"));
@@ -163,11 +162,11 @@ namespace SpreadsheetTests
         public void ReplaceCellToBeEmptyGetNamesOfAllNonEmptyCells()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", "text");
-            ss.SetCellContents("B3", "text");
-            ss.SetCellContents("X2", Double.Parse("6.90"));
-            ss.SetCellContents("G6", new Formula("400 + 20"));
-            ss.SetCellContents("B3", "");
+            ss.SetContentsOfCell("A1", "text");
+            ss.SetContentsOfCell("B3", "text");
+            ss.SetContentsOfCell("X2", "6.90");
+            ss.SetContentsOfCell("G6", "=400 + 20");
+            ss.SetContentsOfCell("B3", "");
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("A1"));
             Assert.IsFalse(ss.GetNamesOfAllNonemptyCells().Contains("B3"));
             Assert.IsTrue(ss.GetNamesOfAllNonemptyCells().Contains("X2"));
@@ -179,39 +178,39 @@ namespace SpreadsheetTests
         public void CircularDependency()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", "2");
-            ss.SetCellContents("B1", new Formula("A1"));
-            ss.SetCellContents("A1", new Formula("B1"));
+            ss.SetContentsOfCell("A1", "2");
+            ss.SetContentsOfCell("B1", "=A1");
+            ss.SetContentsOfCell("A1", "=B1");
         }
 
         [TestMethod]
         public void CircularDependencyPreviousStateReverted()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", "2");
-            ss.SetCellContents("B1", new Formula("A1"));
+            ss.SetContentsOfCell("A1", "2");
+            ss.SetContentsOfCell("B1", "=A1");
             try
             {
-                ss.SetCellContents("A1", new Formula("B1"));
+                ss.SetContentsOfCell("A1", "=B1");
             }
             catch (CircularException) { }
 
-            Assert.IsTrue(ss.SetCellContents("A1", "2").Contains("B1"));
+            Assert.IsTrue(ss.SetContentsOfCell("A1", "2").Contains("B1"));
         }
 
         [TestMethod]
         public void CircularDependencyPreviousStateRevertedWhenNewCellCausesCyclic()
         {
             Spreadsheet ss = new Spreadsheet();
-            ss.SetCellContents("A1", new Formula("B1"));
-            ss.SetCellContents("B1", new Formula("C1"));
+            ss.SetContentsOfCell("A1", "=B1");
+            ss.SetContentsOfCell("B1", "=C1");
             try
             {
-                ss.SetCellContents("C1", new Formula("A1"));
+                ss.SetContentsOfCell("C1", "=A1");
             }
             catch (CircularException) { }
 
-            Assert.IsTrue(ss.SetCellContents("B1", "2").Contains("A1"));
+            Assert.IsTrue(ss.SetContentsOfCell("B1", "2").Contains("A1"));
         }
 
     }

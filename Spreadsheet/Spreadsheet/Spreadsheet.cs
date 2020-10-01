@@ -31,10 +31,7 @@ namespace SS
 
         public override object GetCellContents(string name)
         {
-            if(name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$"))
-            {
-                throw new InvalidNameException();
-            }
+            IsValidName(name);
             if (namedCells.ContainsKey(name))
             {
                 return namedCells[name].GetContents();
