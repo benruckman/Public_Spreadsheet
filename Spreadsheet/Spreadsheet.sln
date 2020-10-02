@@ -19,11 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spreadsheet", "Spreadsheet\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpreadsheetTests", "SpreadsheetTests\SpreadsheetTests.csproj", "{8C2B5954-1278-4DBD-BC25-7B004209B6AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TipCalculator", "TipCalculator\TipCalculator.csproj", "{0A505D87-DC75-412E-9CA4-512A0CD15CCD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS4GradingTests", "PS4GradingTests\PS4GradingTests.csproj", "{BEAF78CA-1DB0-4A90-8227-4731BE71C340}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppForQuickTesting", "ConsoleAppForQuickTesting\ConsoleAppForQuickTesting.csproj", "{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppForQuickTesting", "ConsoleAppForQuickTesting\ConsoleAppForQuickTesting.csproj", "{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +61,6 @@ Global
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C2B5954-1278-4DBD-BC25-7B004209B6AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A505D87-DC75-412E-9CA4-512A0CD15CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BEAF78CA-1DB0-4A90-8227-4731BE71C340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BEAF78CA-1DB0-4A90-8227-4731BE71C340}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEAF78CA-1DB0-4A90-8227-4731BE71C340}.Release|Any CPU.ActiveCfg = Release|Any CPU

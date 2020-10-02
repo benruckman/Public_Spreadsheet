@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace SS
 {
@@ -212,7 +213,26 @@ namespace SS
         public override void Save(string filename)
         {
             changedBool = false;
-            throw new NotImplementedException();
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create(filename, settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", Version);
+
+                foreach (string n in GetNamesOfAllNonemptyCells())
+                {
+                    namedCells[n].WriteXml(writer);
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
         }
 
         public override object GetCellValue(string name)

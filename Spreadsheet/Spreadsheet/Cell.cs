@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace SpreadsheetUtilities
 {
@@ -37,5 +38,12 @@ namespace SpreadsheetUtilities
             return value;
         }
 
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Cell");
+            writer.WriteElementString("name", name);
+            writer.WriteElementString("contents", contents.ToString());
+            writer.WriteEndElement();
+        }
     }
 }
