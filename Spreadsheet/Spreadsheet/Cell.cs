@@ -41,8 +41,17 @@ namespace SpreadsheetUtilities
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteStartElement("Cell");
-            writer.WriteElementString("name", name);
-            writer.WriteElementString("contents", contents.ToString());
+            writer.WriteElementString("Name", name);
+
+            if (contents is Formula)
+            {
+                writer.WriteElementString("Content", "=" + contents.ToString());
+            }
+            else
+            {
+                writer.WriteElementString("Content", contents.ToString());
+            }
+            
             writer.WriteEndElement();
         }
     }

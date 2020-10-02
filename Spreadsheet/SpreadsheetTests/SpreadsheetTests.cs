@@ -200,21 +200,6 @@ namespace SpreadsheetTests
             Assert.IsTrue(ss.SetContentsOfCell("A1", "2").Contains("B1"));
         }
 
-        [TestMethod]
-        public void CircularDependencyPreviousStateRevertedWhenNewCellCausesCyclic()
-        {
-            Spreadsheet ss = new Spreadsheet();
-            ss.SetContentsOfCell("A1", "=B1");
-            ss.SetContentsOfCell("B1", "=C1");
-            try
-            {
-                ss.SetContentsOfCell("C1", "=A1");
-            }
-            catch (CircularException) { }
-
-            Assert.IsTrue(ss.SetContentsOfCell("B1", "2").Contains("A1"));
-        }
-
         //Tests added for PS5 are below
 
         [TestMethod]
@@ -314,12 +299,12 @@ namespace SpreadsheetTests
             using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet");
-                writer.WriteAttributeString("version", "default");
+                writer.WriteStartElement("Spreadsheet");
+                writer.WriteAttributeString("Version", "default");
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "A1");
-                writer.WriteElementString("contents", "hello");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "A1");
+                writer.WriteElementString("Content", "hello");
                 writer.WriteEndElement();
 
                 writer.WriteEndElement();
@@ -411,9 +396,9 @@ namespace SpreadsheetTests
                 writer.WriteStartElement("spreadsheet");
                 writer.WriteAttributeString("version", "default");
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "B1B");
-                writer.WriteElementString("contents", "hello");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "B1B");
+                writer.WriteElementString("Contents", "hello");
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("cell");
@@ -446,22 +431,22 @@ namespace SpreadsheetTests
             using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet");
+                writer.WriteStartElement("Spreadsheet");
                 writer.WriteAttributeString("version", "default");
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "A1");
-                writer.WriteElementString("contents", "hello");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "A1");
+                writer.WriteElementString("Contents", "hello");
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "B1");
-                writer.WriteElementString("contents", "=B1+(3-1))");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "B1");
+                writer.WriteElementString("Contents", "=B1+(3-1))");
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "C1");
-                writer.WriteElementString("contents", "2.00");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "C1");
+                writer.WriteElementString("Contents", "2.00");
                 writer.WriteEndElement();
 
                 writer.WriteEndElement();
@@ -484,22 +469,22 @@ namespace SpreadsheetTests
             using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet");
+                writer.WriteStartElement("Spreadsheet");
                 writer.WriteAttributeString("version", "default");
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "A1");
-                writer.WriteElementString("contents", "hello");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "A1");
+                writer.WriteElementString("Contents", "hello");
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("cell");
+                writer.WriteStartElement("Cell");
                 writer.WriteElementString("NotAName", "B1");
-                writer.WriteElementString("contents", "=345");
+                writer.WriteElementString("Contents", "=345");
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("cell");
-                writer.WriteElementString("name", "C1");
-                writer.WriteElementString("contents", "2.00");
+                writer.WriteStartElement("Cell");
+                writer.WriteElementString("Name", "C1");
+                writer.WriteElementString("Contents", "2.00");
                 writer.WriteEndElement();
 
                 writer.WriteEndElement();
@@ -514,13 +499,28 @@ namespace SpreadsheetTests
         public void SimpleSaveTest()
         {
             Spreadsheet WriteSS = new Spreadsheet();
-            WriteSS.SetContentsOfCell("A1","test1");
+            WriteSS.SetContentsOfCell("A1", "test1");
             WriteSS.SetContentsOfCell("B1", "test2");
             WriteSS.SetContentsOfCell("C1", "test3");
             WriteSS.Save("testFile.xml");
 
             Spreadsheet ReadSS = new Spreadsheet();
             ReadSS.GetSavedVersion("testFile.xml");
+            Assert.IsTrue(ReadSS.GetCellContents("A1").Equals("test1"));
+            Assert.IsTrue(ReadSS.GetCellContents("B1").Equals("test2"));
+            Assert.IsTrue(ReadSS.GetCellContents("C1").Equals("test3"));
+        }
+
+        [TestMethod]
+        public void FourArgumentConstructorTest()
+        {
+            Spreadsheet WriteSS = new Spreadsheet();
+            WriteSS.SetContentsOfCell("A1", "test1");
+            WriteSS.SetContentsOfCell("B1", "test2");
+            WriteSS.SetContentsOfCell("C1", "test3");
+            WriteSS.Save("testFile.xml");
+
+            Spreadsheet ReadSS = new Spreadsheet("testFile.xml", s => true, s => s, "default");
             Assert.IsTrue(ReadSS.GetCellContents("A1").Equals("test1"));
             Assert.IsTrue(ReadSS.GetCellContents("B1").Equals("test2"));
             Assert.IsTrue(ReadSS.GetCellContents("C1").Equals("test3"));
@@ -573,6 +573,28 @@ namespace SpreadsheetTests
             ss.SetContentsOfCell("A1", "=2.000");
             ss.SetContentsOfCell("B1", "=A1 + 3");
             Assert.AreEqual(Double.Parse("5"), ss.GetCellValue("B1"));
+        }
+
+        [TestMethod]
+        public void GetEmptyCellValueTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            Assert.AreEqual("", ss.GetCellValue("A1"));
+        }
+
+        [TestMethod]
+        public void SaveAFormulaTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "=2.000");
+            ss.SetContentsOfCell("B1", "=A1 + 3");
+
+            ss.Save("newTestFile.xml");
+
+            Spreadsheet readSS = new Spreadsheet();
+            readSS.GetSavedVersion("newTestFile.xml");
+            Assert.AreEqual(Double.Parse("2.000"), readSS.GetCellValue("A1"));
+            Assert.AreEqual(Double.Parse("5"), readSS.GetCellValue("B1"));
         }
     }
 

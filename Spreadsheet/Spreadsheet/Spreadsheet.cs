@@ -18,21 +18,21 @@ namespace SS
         private Dictionary<string, Cell> namedCells;
         private bool changedBool;
 
-        public override bool Changed { get => changedBool; protected set  => changedBool = value; }
+        public override bool Changed { get => changedBool; protected set => changedBool = value; }
 
-        public Spreadsheet () : base (s => true, s => s, "default")
+        public Spreadsheet() : base(s => true, s => s, "default")
         {
             dependencyGraph = new DependencyGraph();
             namedCells = new Dictionary<string, Cell>();
         }
 
-        public Spreadsheet(Func<string, bool> IsValid, Func<string, string> normalize, string version) : base (IsValid, normalize, version)
+        public Spreadsheet(Func<string, bool> IsValid, Func<string, string> normalize, string version) : base(IsValid, normalize, version)
         {
             dependencyGraph = new DependencyGraph();
             namedCells = new Dictionary<string, Cell>();
         }
 
-        public Spreadsheet(string pathToFile, Func<string, bool> IsValid, Func<string, string> normalize, string version) : base (IsValid, normalize, version)
+        public Spreadsheet(string pathToFile, Func<string, bool> IsValid, Func<string, string> normalize, string version) : base(IsValid, normalize, version)
         {
             GetSavedVersion(pathToFile);
         }
@@ -72,7 +72,7 @@ namespace SS
         /// Helper method for assigning Cell contents when contents will not introduce new dependency relationships
         /// This method handles removing existing dependencies
         /// </summary>
-        private IList<string> SetCellHelper (string name, object contents)
+        private IList<string> SetCellHelper(string name, object contents)
         {
             //check for valid name and content
             IsValidNameAndContents(ref name, contents);
@@ -99,9 +99,9 @@ namespace SS
             return cellsToRecalculate;
         }
 
-       protected override IList<string> SetCellContents(string name, Formula formula)
+        protected override IList<string> SetCellContents(string name, Formula formula)
         {
-     
+
             IsValidNameAndContents(ref name, formula);
             //intialize list that will be returned
             List<string> cellsToRecalculate = new List<string>();
@@ -145,19 +145,11 @@ namespace SS
             }
             catch (CircularException)
             {
-                if (prevCellContent.Equals(""))
-                {
-                    namedCells.Remove(name);
-                    dependencyGraph.ReplaceDependees(name, prevDependees);
-                    dependencyGraph.ReplaceDependents(name, prevDependents);
-                }
-                else
-                {
-                    //if cell contents were empty before, replace old dependees with new ones
-                    dependencyGraph.ReplaceDependees(name, prevDependees);
-                    dependencyGraph.ReplaceDependents(name, prevDependents);
-                    namedCells[name].SetContents(prevCellContent);
-                }
+
+                //if cell contents were empty before, replace old dependees with new ones
+                dependencyGraph.ReplaceDependees(name, prevDependees);
+                dependencyGraph.ReplaceDependents(name, prevDependents);
+                namedCells[name].SetContents(prevCellContent);
 
                 foreach (string n in formula.GetVariables())
                 {
@@ -182,8 +174,8 @@ namespace SS
             IsValidName(ref name);
         }
 
-        private void IsValidName (ref string name)
-        { 
+        private void IsValidName(ref string name)
+        {
             if (name is null)
             {
                 throw new InvalidNameException();
@@ -191,7 +183,7 @@ namespace SS
 
             name = Normalize(name);
 
-            if (!Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") || !IsValid(name))
+            if (!Regex.IsMatch(name, "^[a-zA-Z]+\\d+$") || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
@@ -206,13 +198,68 @@ namespace SS
 
         public override string GetSavedVersion(string filename)
         {
-            changedBool = false;
-            throw new NotImplementedException();
+            Changed = false;
+
+            namedCells = new Dictionary<string, Cell>();
+            dependencyGraph = new DependencyGraph();
+
+
+            try
+            {
+                using (XmlReader reader = XmlReader.Create(filename))
+                {
+                    string currentName = null;
+                    string currentContent = null;
+
+                    while (reader.Read())
+                    {
+                        if (reader.IsStartElement())
+                        {
+                            switch (reader.Name.ToLower())
+                            {
+                                case "spreadsheet":
+                                    Version = reader["version"];
+                                    break;
+
+                                case "cell":
+                                    currentName = null;
+                                    currentContent = null;
+                                    break;
+
+                                case "name":
+                                    reader.Read();
+                                    currentName = reader.Value;
+                                    break;
+
+                                case "content":
+                                    reader.Read();
+                                    currentContent = reader.Value;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            if (reader.Name.ToLower() == "cell")
+                            {
+                                SetContentsOfCell(currentName, currentContent);
+                                currentName = null;
+                                currentContent = null;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                throw new SpreadsheetReadWriteException("Error Reading File");
+            }
+
+            return Version;
         }
 
         public override void Save(string filename)
         {
-            changedBool = false;
+            Changed = false;
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -221,7 +268,7 @@ namespace SS
             using (XmlWriter writer = XmlWriter.Create(filename, settings))
             {
                 writer.WriteStartDocument();
-                writer.WriteStartElement("spreadsheet");
+                writer.WriteStartElement("Spreadsheet");
                 writer.WriteAttributeString("version", Version);
 
                 foreach (string n in GetNamesOfAllNonemptyCells())
@@ -253,7 +300,7 @@ namespace SS
         {
             IsValidNameAndContents(ref name, content);
 
-            changedBool = true;
+            Changed = true;
 
             IList<string> evaluationList = new List<string>();
 
@@ -280,7 +327,7 @@ namespace SS
 
                     Func<string, double> lookup = GetCellFormulaValue;
 
-                    namedCells[s].SetValue(currentFormula.Evaluate(lookup)) ;
+                    namedCells[s].SetValue(currentFormula.Evaluate(lookup));
                 }
                 else
                 {
@@ -298,7 +345,7 @@ namespace SS
         /// </summary>
         private double GetCellFormulaValue(string name)
         {
-            return (double) namedCells[name].GetValue();
+            return (double)namedCells[name].GetValue();
         }
     }
 }
