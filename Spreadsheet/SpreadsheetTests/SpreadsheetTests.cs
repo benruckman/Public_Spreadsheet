@@ -536,6 +536,14 @@ namespace SpreadsheetTests
 
         [TestMethod]
         [ExpectedException(typeof(InvalidNameException))]
+        public void GetCellValueInvalidNameTest2()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetCellValue("B&2B");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
         public void GetCellValueNullNameTest()
         {
             Spreadsheet ss = new Spreadsheet();

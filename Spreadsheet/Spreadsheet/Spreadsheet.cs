@@ -1,6 +1,7 @@
 ﻿using SpreadsheetUtilities;
 using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -14,8 +15,9 @@ namespace SS
     {
         private DependencyGraph dependencyGraph;
         private Dictionary<string, Cell> namedCells;
+        private bool changedBool;
 
-        public override bool Changed { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
+        public override bool Changed { get => changedBool; protected set  => changedBool = value; }
 
         public Spreadsheet () : base (s => true, s => s, "default")
         {
@@ -29,9 +31,14 @@ namespace SS
             namedCells = new Dictionary<string, Cell>();
         }
 
+        public Spreadsheet(string pathToFile, Func<string, bool> IsValid, Func<string, string> normalize, string version) : base (IsValid, normalize, version)
+        {
+            GetSavedVersion(pathToFile);
+        }
+
         public override object GetCellContents(string name)
         {
-            IsValidName(name);
+            IsValidName(ref name);
             if (namedCells.ContainsKey(name))
             {
                 return namedCells[name].GetContents();
@@ -67,7 +74,7 @@ namespace SS
         private IList<string> SetCellHelper (string name, object contents)
         {
             //check for valid name and content
-            IsValidNameAndContents(name, contents);
+            IsValidNameAndContents(ref name, contents);
             //intialize list that will be returned
             List<string> cellsToRecalculate = new List<string>();
 
@@ -94,7 +101,7 @@ namespace SS
        protected override IList<string> SetCellContents(string name, Formula formula)
         {
      
-            IsValidNameAndContents(name, formula);
+            IsValidNameAndContents(ref name, formula);
             //intialize list that will be returned
             List<string> cellsToRecalculate = new List<string>();
 
@@ -162,20 +169,28 @@ namespace SS
 
         /// <summary>
         /// Helper Method, throws if invalid name or contents are provided
+        /// Also normalizes name;
         /// </summary>
-        private void IsValidNameAndContents(string name, Object obj)
+        private void IsValidNameAndContents(ref string name, Object obj)
         {
             //make sure provided arguments are valid
             if (obj is null)
             {
                 throw new ArgumentNullException("Formula cannot be null");
             }
-            IsValidName(name);
+            IsValidName(ref name);
         }
 
-        private void IsValidName (string name)
+        private void IsValidName (ref string name)
         { 
-            if (name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") || !IsValid(name))
+            if (name is null)
+            {
+                throw new InvalidNameException();
+            }
+
+            name = Normalize(name);
+
+            if (!Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
@@ -184,27 +199,86 @@ namespace SS
 
         protected override IEnumerable<string> GetDirectDependents(string name)
         {
+            IsValidName(ref name);
             return dependencyGraph.GetDependents(name);
         }
 
         public override string GetSavedVersion(string filename)
         {
+            changedBool = false;
             throw new NotImplementedException();
         }
 
         public override void Save(string filename)
         {
+            changedBool = false;
             throw new NotImplementedException();
         }
 
         public override object GetCellValue(string name)
         {
-            throw new NotImplementedException();
+            IsValidName(ref name);
+
+            if (namedCells.ContainsKey(name))
+            {
+                return namedCells[name].GetValue();
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public override IList<string> SetContentsOfCell(string name, string content)
         {
-            throw new NotImplementedException();
+            IsValidNameAndContents(ref name, content);
+
+            changedBool = true;
+
+            IList<string> evaluationList = new List<string>();
+
+            if (Double.TryParse(content, out _))
+            {
+                evaluationList = SetCellContents(name, Double.Parse(content));
+            }
+            else if (content.StartsWith("="))
+            {
+                evaluationList = SetCellContents(name, new Formula(content.Substring(1)));
+            }
+            else
+            {
+                evaluationList = SetCellContents(name, content);
+            }
+
+            object currentContent;
+            foreach (string s in evaluationList)
+            {
+                currentContent = namedCells[s].GetContents();
+                if (currentContent is Formula)
+                {
+                    Formula currentFormula = (Formula)currentContent;
+
+                    Func<string, double> lookup = GetCellFormulaValue;
+
+                    namedCells[s].SetValue(currentFormula.Evaluate(lookup)) ;
+                }
+                else
+                {
+                    namedCells[s].SetValue(currentContent);
+                }
+            }
+
+
+            return evaluationList;
+        }
+
+
+        /// <summary>
+        /// Helper method used when cell content is guarnteed by outside code to be a formula
+        /// </summary>
+        private double GetCellFormulaValue(string name)
+        {
+            return (double) namedCells[name].GetValue();
         }
     }
 }
