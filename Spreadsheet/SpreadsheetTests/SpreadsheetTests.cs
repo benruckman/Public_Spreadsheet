@@ -5,7 +5,9 @@ using SS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Xml;
 
 namespace SpreadsheetTests
 {
@@ -300,6 +302,269 @@ namespace SpreadsheetTests
         {
             Spreadsheet ss = new Spreadsheet(s => true, s => s, "420");
             Assert.AreEqual("420", ss.Version);
+        }
+
+        [TestMethod]
+        public void GetSavedVersionTest()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "A1");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("temp.xml");
+            Assert.IsTrue(ss.GetCellContents("A1").Equals("hello"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpreadsheetReadWriteException))]
+        public void BadFileNameGetSavedVersionTest()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "A1");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("wrongTemp.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpreadsheetReadWriteException))]
+        //Tests when element other then cell appears
+        public void BadFileDataGetSaveVersionTest1()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("NotACell");
+                writer.WriteElementString("name", "A1");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "B1");
+                writer.WriteElementString("contents", "=");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "C1");
+                writer.WriteElementString("contents", "2.00");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("temp.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpreadsheetReadWriteException))]
+        //Tests when cell has an invalid name
+        public void BadFileDataGetSaveVersionTest2()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "B1B");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "B1");
+                writer.WriteElementString("contents", "=345");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "C1");
+                writer.WriteElementString("contents", "2.00");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("temp.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpreadsheetReadWriteException))]
+        //Tests when cell contains invalid contents
+        public void BadFileDataGetSaveVersionTest3()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "A1");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "B1");
+                writer.WriteElementString("contents", "=B1+(3-1))");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "C1");
+                writer.WriteElementString("contents", "2.00");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("temp.xml");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(SpreadsheetReadWriteException))]
+        //Tests when cell contains an element that isnt name or contents
+        public void BadFileDataGetSaveVersionTest4()
+        {
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.IndentChars = "  ";
+
+            using (XmlWriter writer = XmlWriter.Create("temp.xml", settings))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("spreadsheet");
+                writer.WriteAttributeString("version", "default");
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "A1");
+                writer.WriteElementString("contents", "hello");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("NotAName", "B1");
+                writer.WriteElementString("contents", "=345");
+                writer.WriteEndElement();
+
+                writer.WriteStartElement("cell");
+                writer.WriteElementString("name", "C1");
+                writer.WriteElementString("contents", "2.00");
+                writer.WriteEndElement();
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetSavedVersion("temp.xml");
+        }
+
+        [TestMethod]
+        public void SimpleSaveTest()
+        {
+            Spreadsheet WriteSS = new Spreadsheet();
+            WriteSS.SetContentsOfCell("A1","test1");
+            WriteSS.SetContentsOfCell("B1", "test2");
+            WriteSS.SetContentsOfCell("C1", "test3");
+            WriteSS.Save("testFile.xml");
+
+            Spreadsheet ReadSS = new Spreadsheet();
+            ReadSS.GetSavedVersion("testFile.xml");
+            Assert.IsTrue(ReadSS.GetCellContents("A1").Equals("test1"));
+            Assert.IsTrue(ReadSS.GetCellContents("B1").Equals("test2"));
+            Assert.IsTrue(ReadSS.GetCellContents("C1").Equals("test3"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
+        public void GetCellValueInvalidNameTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetCellValue("B2B");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNameException))]
+        public void GetCellValueNullNameTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.GetCellValue(null);
+        }
+
+        [TestMethod]
+        public void GetCellValueStringTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "test");
+            Assert.AreEqual("test", ss.GetCellValue("A1"));
+        }
+
+        [TestMethod]
+        public void GetCellValueDoubleTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "2.000");
+            Assert.AreEqual(Double.Parse("2.000"), ss.GetCellValue("A1"));
+        }
+
+        [TestMethod]
+        public void GetCellValueFormulaTest()
+        {
+            Spreadsheet ss = new Spreadsheet();
+            ss.SetContentsOfCell("A1", "=2.000");
+            ss.SetContentsOfCell("B1", "=A1 + 3");
+            Assert.AreEqual(Double.Parse("5"), ss.GetCellValue("B1"));
         }
     }
 

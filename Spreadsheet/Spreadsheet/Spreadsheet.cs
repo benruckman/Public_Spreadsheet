@@ -175,7 +175,7 @@ namespace SS
 
         private void IsValidName (string name)
         { 
-            if (name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$"))
+            if (name is null || !Regex.IsMatch(name, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") || !IsValid(name))
             {
                 throw new InvalidNameException();
             }
