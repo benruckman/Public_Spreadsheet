@@ -270,7 +270,7 @@ namespace SpreadsheetUtilities
                 //If currentToken is an integer
                 if (Double.TryParse(currentToken, out _))
                 {
-                    DoubleHandler(operatorStack, valueStack, int.Parse(currentToken));
+                    DoubleHandler(operatorStack, valueStack, Double.Parse(currentToken));
                 }
                 //If currentToken is a variable
                 else if (Regex.IsMatch(currentToken, "^[a-zA-Z]+[0-9]+$"))
