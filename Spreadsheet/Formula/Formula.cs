@@ -19,6 +19,7 @@
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Text;
@@ -238,7 +239,7 @@ namespace SpreadsheetUtilities
             {
                 return EvaluateHelper(NormalizedFormula, lookup);
             }
-            catch (ArgumentException e)
+            catch
             {
                 return new FormulaError("Divide By Zero Occured");
             }
@@ -264,6 +265,7 @@ namespace SpreadsheetUtilities
             foreach (String t in substrings)
             {
                 currentToken = t.Trim();
+
 
                 //If currentToken is an integer
                 if (Double.TryParse(currentToken, out _))

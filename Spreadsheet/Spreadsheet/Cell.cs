@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace SpreadsheetUtilities
 {
@@ -8,12 +9,13 @@ namespace SpreadsheetUtilities
     {
         private string name;
         private object contents;
-        private string value;
+        private object value;
 
         public Cell (string name, object contents)
         {
             this.name = name;
             this.contents = contents;
+            this.value = null;
         }
 
         public void SetContents (object contents)
@@ -26,5 +28,31 @@ namespace SpreadsheetUtilities
             return contents;
         }
 
+        public void SetValue (object value)
+        {
+            this.value = value;
+        }
+
+        public object GetValue ()
+        {
+            return value;
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("Cell");
+            writer.WriteElementString("Name", name);
+
+            if (contents is Formula)
+            {
+                writer.WriteElementString("Content", "=" + contents.ToString());
+            }
+            else
+            {
+                writer.WriteElementString("Content", contents.ToString());
+            }
+            
+            writer.WriteEndElement();
+        }
     }
 }
