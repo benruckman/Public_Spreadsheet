@@ -232,6 +232,7 @@ namespace SS
         {
             if (sheet.TryGetValue(name, out Cell cell))
             {
+                //change to is statement
                 if (!cell.GetValue().GetType().Equals(new FormulaError().GetType()))
                 {
                     if (!cell.Type().Equals("string"))
