@@ -51,5 +51,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControl1.resx">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpreadsheetGUI\SpreadsheetGUI.csproj">
+      <Project>{8320449d-0741-44b9-a7c6-56efef981b89}</Project>
+      <Name>SpreadsheetGUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
+      <Project>{78d4e33b-2d07-4de8-a717-6a60a58a4e35}</Project>
+      <Name>Spreadsheet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

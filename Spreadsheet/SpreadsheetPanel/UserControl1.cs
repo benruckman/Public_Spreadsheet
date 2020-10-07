@@ -131,6 +131,7 @@ namespace SS
 
         public bool GetValue(int col, int row, out string value)
         {
+
             return drawingPanel.GetValue(col, row, out value);
         }
 
@@ -474,7 +475,6 @@ namespace SS
             /// the indexes are zero based.
             /// </summary>
             /// <param name="e"></param>
-
             protected override void OnMouseClick(MouseEventArgs e)
             {
                 base.OnClick(e);
