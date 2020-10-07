@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS4GradingTests", "PS4Gradi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppForQuickTesting", "ConsoleAppForQuickTesting\ConsoleAppForQuickTesting.csproj", "{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetGUI", "SpreadsheetGUI\SpreadsheetGUI.csproj", "{8320449D-0741-44B9-A7C6-56EFEF981B89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpreadsheetPanel", "SpreadsheetPanel\SpreadsheetPanel.csproj", "{881028FF-C19B-4255-8B50-A4AE9803974B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE2938AE-4B0B-4DFE-8997-093CCA41D3BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8320449D-0741-44B9-A7C6-56EFEF981B89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8320449D-0741-44B9-A7C6-56EFEF981B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8320449D-0741-44B9-A7C6-56EFEF981B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8320449D-0741-44B9-A7C6-56EFEF981B89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{881028FF-C19B-4255-8B50-A4AE9803974B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{881028FF-C19B-4255-8B50-A4AE9803974B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{881028FF-C19B-4255-8B50-A4AE9803974B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{881028FF-C19B-4255-8B50-A4AE9803974B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
