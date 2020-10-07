@@ -310,7 +310,7 @@ namespace SS
             }
             else if (content.StartsWith("="))
             {
-                evaluationList = SetCellContents(name, new Formula(content.Substring(1)));
+                evaluationList = SetCellContents(name, new Formula(content.Substring(1), Normalize, IsValid));
             }
             else
             {
@@ -329,9 +329,13 @@ namespace SS
 
                     namedCells[s].SetValue(currentFormula.Evaluate(lookup));
                 }
+                else if (Double.TryParse(currentContent.ToString(), out _))
+                {
+                    namedCells[s].SetValue(Double.Parse(currentContent.ToString()));
+                }
                 else
                 {
-                    namedCells[s].SetValue(currentContent);
+                    namedCells[s].SetValue(currentContent.ToString());
                 }
             }
 
