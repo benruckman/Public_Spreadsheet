@@ -97,8 +97,6 @@ namespace SpreadsheetGUI
             if (ss.Changed)
                 if (SaveChangeErrorMessageHelper())
                     return;
-                }
-            }
 
             string filename = "";
 

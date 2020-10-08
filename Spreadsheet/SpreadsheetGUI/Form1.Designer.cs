@@ -43,6 +43,7 @@
             this.SaveFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.NewFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.QuitMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,7 +123,8 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.HelpButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -146,30 +148,40 @@
             // OpenFileMenuButton
             // 
             this.OpenFileMenuButton.Name = "OpenFileMenuButton";
-            this.OpenFileMenuButton.Size = new System.Drawing.Size(124, 22);
+            this.OpenFileMenuButton.Size = new System.Drawing.Size(180, 22);
             this.OpenFileMenuButton.Text = "Open File";
             this.OpenFileMenuButton.Click += new System.EventHandler(this.OpenFileMenuButton_Click);
             // 
             // SaveFileMenuButton
             // 
             this.SaveFileMenuButton.Name = "SaveFileMenuButton";
-            this.SaveFileMenuButton.Size = new System.Drawing.Size(124, 22);
+            this.SaveFileMenuButton.Size = new System.Drawing.Size(180, 22);
             this.SaveFileMenuButton.Text = "Save File";
             this.SaveFileMenuButton.Click += new System.EventHandler(this.SaveFileMenuButton_Click);
             // 
             // NewFileMenuButton
             // 
             this.NewFileMenuButton.Name = "NewFileMenuButton";
-            this.NewFileMenuButton.Size = new System.Drawing.Size(124, 22);
+            this.NewFileMenuButton.Size = new System.Drawing.Size(180, 22);
             this.NewFileMenuButton.Text = "New File";
             this.NewFileMenuButton.Click += new System.EventHandler(this.NewFileMenuButton_Click);
             // 
             // QuitMenuButton
             // 
             this.QuitMenuButton.Name = "QuitMenuButton";
-            this.QuitMenuButton.Size = new System.Drawing.Size(124, 22);
+            this.QuitMenuButton.Size = new System.Drawing.Size(180, 22);
             this.QuitMenuButton.Text = "Quit";
             this.QuitMenuButton.Click += new System.EventHandler(this.QuitMenuButton_Click);
+            // 
+            // HelpButton
+            // 
+            this.HelpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.HelpButton.Image = ((System.Drawing.Image)(resources.GetObject("HelpButton.Image")));
+            this.HelpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HelpButton.Name = "HelpButton";
+            this.HelpButton.Size = new System.Drawing.Size(36, 22);
+            this.HelpButton.Text = "Help";
+            this.HelpButton.Click += new System.EventHandler(this.HelpButton_Click);
             // 
             // Form1
             // 
@@ -210,6 +222,7 @@
         private System.Windows.Forms.ToolStripMenuItem SaveFileMenuButton;
         private System.Windows.Forms.ToolStripMenuItem NewFileMenuButton;
         private System.Windows.Forms.ToolStripMenuItem QuitMenuButton;
+        private System.Windows.Forms.ToolStripButton HelpButton;
     }
 }
 
