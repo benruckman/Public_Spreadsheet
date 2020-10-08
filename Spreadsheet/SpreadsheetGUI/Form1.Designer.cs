@@ -46,25 +46,30 @@
             // 
             // CellNameBox
             // 
-            this.CellNameBox.Enabled = false;
-            this.CellNameBox.Location = new System.Drawing.Point(44, 29);
+            this.CellNameBox.BackColor = System.Drawing.SystemColors.Info;
+            this.CellNameBox.Location = new System.Drawing.Point(44, 42);
             this.CellNameBox.Name = "CellNameBox";
-            this.CellNameBox.Size = new System.Drawing.Size(81, 20);
+            this.CellNameBox.ReadOnly = true;
+            this.CellNameBox.Size = new System.Drawing.Size(28, 20);
             this.CellNameBox.TabIndex = 1;
             // 
             // CellContentBox
             // 
-            this.CellContentBox.Location = new System.Drawing.Point(145, 28);
+            this.CellContentBox.BackColor = System.Drawing.SystemColors.Info;
+            this.CellContentBox.Location = new System.Drawing.Point(78, 42);
             this.CellContentBox.Name = "CellContentBox";
-            this.CellContentBox.Size = new System.Drawing.Size(100, 20);
+            this.CellContentBox.ReadOnly = true;
+            this.CellContentBox.Size = new System.Drawing.Size(115, 20);
             this.CellContentBox.TabIndex = 2;
             // 
             // CellValueBox
             // 
-            this.CellValueBox.Location = new System.Drawing.Point(269, 28);
+            this.CellValueBox.BackColor = System.Drawing.SystemColors.Info;
+            this.CellValueBox.Location = new System.Drawing.Point(199, 42);
             this.CellValueBox.Name = "CellValueBox";
-            this.CellValueBox.Size = new System.Drawing.Size(100, 20);
+            this.CellValueBox.Size = new System.Drawing.Size(244, 20);
             this.CellValueBox.TabIndex = 3;
+            this.CellValueBox.TextChanged += new System.EventHandler(this.CellValueBox_TextChanged);
             // 
             // Form1
             // 

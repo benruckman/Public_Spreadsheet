@@ -29,5 +29,10 @@ namespace SpreadsheetGUI
         {
             controller.OnSelectionChanged(ssp, CellNameBox, CellContentBox, CellValueBox);
         }
+
+        private void CellValueBox_TextChanged(object sender, EventArgs e)
+        {
+            controller.OnContentsChanged(spreadsheetPanel, CellContentBox, CellValueBox);
+        }
     }
 }

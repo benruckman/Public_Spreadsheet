@@ -59,7 +59,7 @@ namespace SpreadsheetGUI
         /// <returns></returns>
         private string convertIntToName (int col, int row)
         {
-            throw new NotImplementedException();
+            return "" + ((char)(col + 65)).ToString() + (row + 1).ToString();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SpreadsheetGUI
         /// <param name="col"></param>
         /// <param name="row"></param>
         /// <param name="name"></param>
-        private void convertNameToInt (out int col, out int row, string name)
+        private void convertNameToInt(out int col, out int row, string name)
         {
             throw new NotImplementedException();
         }
