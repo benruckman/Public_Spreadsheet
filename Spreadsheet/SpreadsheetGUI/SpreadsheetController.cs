@@ -91,40 +91,37 @@ namespace SpreadsheetGUI
 
 
 
-
         public void OpenFileButtonHandler(SpreadsheetPanel ssp)
         {
             if (ss.Changed)
-            {
-                SaveChangeErrorMessageHelper();
-            }
+                if (SaveChangeErrorMessageHelper())
+                    return;
 
             string filename = "";
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
+                openFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                   
+
                     filename = openFileDialog.FileName;
                 }
             }
 
             try
             {
-                ss = new Spreadsheet (filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
-                Console.WriteLine("a");
+                ss = new Spreadsheet(filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
             }
             catch (Exception e)
             {
                 MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
             }
+            ssp.Clear();
 
-            Console.WriteLine("test");
 
             foreach (string name in ss.GetNamesOfAllNonemptyCells())
             {
-                Console.WriteLine(name);
                 convertNameToInt(out int col, out int row, name);
                 ssp.SetValue(col, row, ss.GetCellValue(name).ToString());
             }
@@ -133,36 +130,39 @@ namespace SpreadsheetGUI
 
         public void SaveFileButtonHandler()
         {
-            ss.Save("ps6");//To implement to get the filename to save down as.
+            string filename = "";
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filename = saveFileDialog.FileName;
+                }
+            }
+            ss.Save(filename);//To implement to get the filename to save down as.
         }
 
 
         public void NewFileButtonHandler()
         {
             if (ss.Changed)
-                SaveChangeErrorMessageHelper();
+                if (SaveChangeErrorMessageHelper())
+                    return;
         }
 
         public void QuitFileButtonHandler()
         {
             if (ss.Changed)
-                SaveChangeErrorMessageHelper();
-            Quit();
+                if (SaveChangeErrorMessageHelper())
+                    return;
+            //Quit();
         }
 
-        private void SaveChangeErrorMessageHelper()
+        private bool SaveChangeErrorMessageHelper()
         {
             DialogResult res = MessageBox.Show("Your data isn't saved, if you quit you will lose your changes", "Changes not saved", MessageBoxButtons.OKCancel);
-            if (res.ToString().Equals("OK"))
-            {
-                Quit();
-            }
-        }
-
-        private void Quit()
-        {
-            
-            /*throw new NotImplementedException();*/
+            return !res.ToString().Equals("OK");
         }
     }
 }
