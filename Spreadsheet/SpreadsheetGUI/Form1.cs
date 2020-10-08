@@ -39,7 +39,22 @@ namespace SpreadsheetGUI
 
         private void OpenFileMenuButton_Click(object sender, EventArgs e)
         {
+            controller.OpenFileButtonHandler();
+        }
 
+        private void SaveFileMenuButton_Click(object sender, EventArgs e)
+        {
+            controller.SaveFileButtonHandler();
+        }
+
+        private void NewFileMenuButton_Click(object sender, EventArgs e)
+        {
+            controller.NewFileButtonHandler();
+        }
+
+        private void QuitMenuButton_Click(object sender, EventArgs e)
+        {
+            controller.QuitFileButtonHandler();
         }
     }
 }

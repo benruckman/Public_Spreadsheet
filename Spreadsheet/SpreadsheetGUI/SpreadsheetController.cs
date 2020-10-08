@@ -39,7 +39,7 @@ namespace SpreadsheetGUI
             {
                 cellContentBox.Text = "=" + ss.GetCellContents(convertIntToName(col, row)).ToString();
             }
-           
+
         }
 
         /// <summary>
@@ -94,24 +94,43 @@ namespace SpreadsheetGUI
 
         public void OpenFileButtonHandler()
         {
-
+            if (ss.Changed)
+                SaveChangeErrorMessageHelper();
         }
 
 
         public void SaveFileButtonHandler()
         {
-
+            ss.Save("ps6");//To implement to get the filename to save down as.
         }
 
 
         public void NewFileButtonHandler()
         {
+            if (ss.Changed)
+                SaveChangeErrorMessageHelper();
+        }
 
+        public void QuitFileButtonHandler()
+        {
+            if (ss.Changed)
+                SaveChangeErrorMessageHelper();
+            Quit();
         }
 
         private void SaveChangeErrorMessageHelper()
         {
+            DialogResult res = MessageBox.Show("Your data isn't saved, if you quit you will lose your changes", "Changes not saved", MessageBoxButtons.OKCancel);
+            if (res.ToString().Equals("OK"))
+            {
+                Quit();
+            }
+        }
 
+        private void Quit()
+        {
+            
+            /*throw new NotImplementedException();*/
         }
     }
 }
