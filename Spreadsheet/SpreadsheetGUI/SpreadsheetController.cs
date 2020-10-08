@@ -95,9 +95,7 @@ namespace SpreadsheetGUI
         public void OpenFileButtonHandler(SpreadsheetPanel ssp)
         {
             if (ss.Changed)
-            {
-                if(SaveChangeErrorMessageHelper())
-                {
+                if (SaveChangeErrorMessageHelper())
                     return;
                 }
             }
@@ -106,6 +104,7 @@ namespace SpreadsheetGUI
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
+                openFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                    
@@ -115,14 +114,14 @@ namespace SpreadsheetGUI
 
             try
             {
-                ss = new Spreadsheet (filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
+                ss = new Spreadsheet(filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
             }
             catch
             {
                 MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
             }
-
             ssp.Clear();
+
 
             foreach (string name in ss.GetNamesOfAllNonemptyCells())
             {
@@ -135,56 +134,33 @@ namespace SpreadsheetGUI
         public void SaveFileButtonHandler()
         {
             string filename = "";
+
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                saveFileDialog.Filter = "Spreadsheet (*.sprd)|*.sprd";
+                saveFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     filename = saveFileDialog.FileName;
                 }
             }
-
-            ss.Save(filename);
+            ss.Save(filename);//To implement to get the filename to save down as.
         }
 
-
-        public void NewFileButtonHandler(SpreadsheetPanel ssp)
+        public bool QuitFileButtonHandler()
         {
             if (ss.Changed)
             {
                 if (SaveChangeErrorMessageHelper())
-                {
-                    return;
-                }
+                    return false;
             }
+            return true;
 
-            ssp.Clear();
-            ss = new Spreadsheet();
-        }
-
-        public void QuitFileButtonHandler()
-        {
-            if (ss.Changed)
-            {
-                if (SaveChangeErrorMessageHelper())
-                {
-                    return;
-                }
-            }
         }
 
         private bool SaveChangeErrorMessageHelper()
         {
             DialogResult res = MessageBox.Show("Your data isn't saved, if you quit you will lose your changes", "Changes not saved", MessageBoxButtons.OKCancel);
-            if (res.ToString().Equals("OK"))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !res.ToString().Equals("OK");
         }
     }
 }

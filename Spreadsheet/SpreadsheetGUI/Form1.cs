@@ -49,12 +49,13 @@ namespace SpreadsheetGUI
 
         private void NewFileMenuButton_Click(object sender, EventArgs e)
         {
-            controller.NewFileButtonHandler();
+            DemoApplicationContext.getAppContext().RunForm(new Form1());
         }
 
         private void QuitMenuButton_Click(object sender, EventArgs e)
         {
-            controller.QuitFileButtonHandler();
+            if (controller.QuitFileButtonHandler())
+                Close();
         }
 
         private void Form1_Deactivate(object sender, EventArgs e)
