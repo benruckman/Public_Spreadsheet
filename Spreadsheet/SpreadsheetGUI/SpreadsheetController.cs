@@ -104,7 +104,6 @@ namespace SpreadsheetGUI
                 openFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     filename = openFileDialog.FileName;
                 }
             }
@@ -143,20 +142,15 @@ namespace SpreadsheetGUI
             ss.Save(filename);//To implement to get the filename to save down as.
         }
 
-
-        public void NewFileButtonHandler()
+        public bool QuitFileButtonHandler()
         {
             if (ss.Changed)
+            {
                 if (SaveChangeErrorMessageHelper())
-                    return;
-        }
+                    return false;
+            }
+            return true;
 
-        public void QuitFileButtonHandler()
-        {
-            if (ss.Changed)
-                if (SaveChangeErrorMessageHelper())
-                    return;
-            //Quit();
         }
 
         private bool SaveChangeErrorMessageHelper()
