@@ -117,7 +117,7 @@ namespace SpreadsheetGUI
             {
                 ss = new Spreadsheet (filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
             }
-            catch (Exception e)
+            catch
             {
                 MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
             }
@@ -149,7 +149,7 @@ namespace SpreadsheetGUI
         }
 
 
-        public void NewFileButtonHandler()
+        public void NewFileButtonHandler(SpreadsheetPanel ssp)
         {
             if (ss.Changed)
             {
@@ -158,6 +158,9 @@ namespace SpreadsheetGUI
                     return;
                 }
             }
+
+            ssp.Clear();
+            ss = new Spreadsheet();
         }
 
         public void QuitFileButtonHandler()

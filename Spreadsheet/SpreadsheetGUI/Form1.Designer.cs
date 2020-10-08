@@ -146,28 +146,28 @@
             // OpenFileMenuButton
             // 
             this.OpenFileMenuButton.Name = "OpenFileMenuButton";
-            this.OpenFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.OpenFileMenuButton.Size = new System.Drawing.Size(124, 22);
             this.OpenFileMenuButton.Text = "Open File";
             this.OpenFileMenuButton.Click += new System.EventHandler(this.OpenFileMenuButton_Click);
             // 
             // SaveFileMenuButton
             // 
             this.SaveFileMenuButton.Name = "SaveFileMenuButton";
-            this.SaveFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.SaveFileMenuButton.Size = new System.Drawing.Size(124, 22);
             this.SaveFileMenuButton.Text = "Save File";
             this.SaveFileMenuButton.Click += new System.EventHandler(this.SaveFileMenuButton_Click);
             // 
             // NewFileMenuButton
             // 
             this.NewFileMenuButton.Name = "NewFileMenuButton";
-            this.NewFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.NewFileMenuButton.Size = new System.Drawing.Size(124, 22);
             this.NewFileMenuButton.Text = "New File";
             this.NewFileMenuButton.Click += new System.EventHandler(this.NewFileMenuButton_Click);
             // 
             // QuitMenuButton
             // 
             this.QuitMenuButton.Name = "QuitMenuButton";
-            this.QuitMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.QuitMenuButton.Size = new System.Drawing.Size(124, 22);
             this.QuitMenuButton.Text = "Quit";
             this.QuitMenuButton.Click += new System.EventHandler(this.QuitMenuButton_Click);
             // 
