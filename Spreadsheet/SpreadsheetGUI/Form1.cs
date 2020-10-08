@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SS;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,21 @@ namespace SpreadsheetGUI
 {
     public partial class Form1 : Form
     {
+        SpreadsheetController controller;
+
         public Form1()
         {
             InitializeComponent();
+
+            controller = new SpreadsheetController();
+
+            spreadsheetPanel.SelectionChanged += selectionChanged;
+
+        }
+
+        public void selectionChanged(SpreadsheetPanel ssp)
+        {
+            controller.OnSelectionChanged(ssp, CellNameBox, CellContentBox, CellValueBox);
         }
     }
 }
