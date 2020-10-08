@@ -29,9 +29,13 @@
         private void InitializeComponent()
         {
             this.spreadsheetPanel = new SS.SpreadsheetPanel();
-            this.CellNameBox = new System.Windows.Forms.TextBox();
-            this.CellContentBox = new System.Windows.Forms.TextBox();
+            this.cellNameBox = new System.Windows.Forms.TextBox();
             this.CellValueBox = new System.Windows.Forms.TextBox();
+            this.CellContentBox = new System.Windows.Forms.TextBox();
+            this.CalculateValuesButton = new System.Windows.Forms.Button();
+            this.CellNameLabel = new System.Windows.Forms.Label();
+            this.CellValueLabel = new System.Windows.Forms.Label();
+            this.CellContentLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // spreadsheetPanel
@@ -44,41 +48,81 @@
             this.spreadsheetPanel.Size = new System.Drawing.Size(776, 370);
             this.spreadsheetPanel.TabIndex = 0;
             // 
-            // CellNameBox
+            // cellNameBox
             // 
-            this.CellNameBox.BackColor = System.Drawing.SystemColors.Info;
-            this.CellNameBox.Location = new System.Drawing.Point(44, 42);
-            this.CellNameBox.Name = "CellNameBox";
-            this.CellNameBox.ReadOnly = true;
-            this.CellNameBox.Size = new System.Drawing.Size(28, 20);
-            this.CellNameBox.TabIndex = 1;
-            // 
-            // CellContentBox
-            // 
-            this.CellContentBox.BackColor = System.Drawing.SystemColors.Info;
-            this.CellContentBox.Location = new System.Drawing.Point(78, 42);
-            this.CellContentBox.Name = "CellContentBox";
-            this.CellContentBox.ReadOnly = true;
-            this.CellContentBox.Size = new System.Drawing.Size(115, 20);
-            this.CellContentBox.TabIndex = 2;
+            this.cellNameBox.BackColor = System.Drawing.SystemColors.Info;
+            this.cellNameBox.Location = new System.Drawing.Point(44, 42);
+            this.cellNameBox.Name = "cellNameBox";
+            this.cellNameBox.ReadOnly = true;
+            this.cellNameBox.Size = new System.Drawing.Size(28, 20);
+            this.cellNameBox.TabIndex = 1;
             // 
             // CellValueBox
             // 
             this.CellValueBox.BackColor = System.Drawing.SystemColors.Info;
-            this.CellValueBox.Location = new System.Drawing.Point(199, 42);
+            this.CellValueBox.Location = new System.Drawing.Point(78, 42);
             this.CellValueBox.Name = "CellValueBox";
-            this.CellValueBox.Size = new System.Drawing.Size(244, 20);
-            this.CellValueBox.TabIndex = 3;
-            this.CellValueBox.TextChanged += new System.EventHandler(this.CellValueBox_TextChanged);
+            this.CellValueBox.ReadOnly = true;
+            this.CellValueBox.Size = new System.Drawing.Size(115, 20);
+            this.CellValueBox.TabIndex = 2;
+            // 
+            // CellContentBox
+            // 
+            this.CellContentBox.BackColor = System.Drawing.SystemColors.Info;
+            this.CellContentBox.Location = new System.Drawing.Point(199, 42);
+            this.CellContentBox.Name = "CellContentBox";
+            this.CellContentBox.Size = new System.Drawing.Size(244, 20);
+            this.CellContentBox.TabIndex = 3;
+            // 
+            // CalculateValuesButton
+            // 
+            this.CalculateValuesButton.Location = new System.Drawing.Point(449, 40);
+            this.CalculateValuesButton.Name = "CalculateValuesButton";
+            this.CalculateValuesButton.Size = new System.Drawing.Size(87, 23);
+            this.CalculateValuesButton.TabIndex = 4;
+            this.CalculateValuesButton.Text = "Enter Contents";
+            this.CalculateValuesButton.UseVisualStyleBackColor = true;
+            this.CalculateValuesButton.Click += new System.EventHandler(this.CalculateValuesButton_Click);
+            // 
+            // CellNameLabel
+            // 
+            this.CellNameLabel.AutoSize = true;
+            this.CellNameLabel.Location = new System.Drawing.Point(32, 26);
+            this.CellNameLabel.Name = "CellNameLabel";
+            this.CellNameLabel.Size = new System.Drawing.Size(55, 13);
+            this.CellNameLabel.TabIndex = 5;
+            this.CellNameLabel.Text = "Cell Name";
+            // 
+            // CellValueLabel
+            // 
+            this.CellValueLabel.AutoSize = true;
+            this.CellValueLabel.Location = new System.Drawing.Point(103, 26);
+            this.CellValueLabel.Name = "CellValueLabel";
+            this.CellValueLabel.Size = new System.Drawing.Size(54, 13);
+            this.CellValueLabel.TabIndex = 6;
+            this.CellValueLabel.Text = "Cell Value";
+            // 
+            // CellContentLabel
+            // 
+            this.CellContentLabel.AutoSize = true;
+            this.CellContentLabel.Location = new System.Drawing.Point(292, 26);
+            this.CellContentLabel.Name = "CellContentLabel";
+            this.CellContentLabel.Size = new System.Drawing.Size(69, 13);
+            this.CellContentLabel.TabIndex = 7;
+            this.CellContentLabel.Text = "Cell Contents";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.CellValueBox);
+            this.Controls.Add(this.CellContentLabel);
+            this.Controls.Add(this.CellValueLabel);
+            this.Controls.Add(this.CellNameLabel);
+            this.Controls.Add(this.CalculateValuesButton);
             this.Controls.Add(this.CellContentBox);
-            this.Controls.Add(this.CellNameBox);
+            this.Controls.Add(this.CellValueBox);
+            this.Controls.Add(this.cellNameBox);
             this.Controls.Add(this.spreadsheetPanel);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -90,9 +134,13 @@
         #endregion
 
         private SS.SpreadsheetPanel spreadsheetPanel;
-        private System.Windows.Forms.TextBox CellNameBox;
-        private System.Windows.Forms.TextBox CellContentBox;
+        private System.Windows.Forms.TextBox cellNameBox;
         private System.Windows.Forms.TextBox CellValueBox;
+        private System.Windows.Forms.TextBox CellContentBox;
+        private System.Windows.Forms.Button CalculateValuesButton;
+        private System.Windows.Forms.Label CellNameLabel;
+        private System.Windows.Forms.Label CellValueLabel;
+        private System.Windows.Forms.Label CellContentLabel;
     }
 }
 

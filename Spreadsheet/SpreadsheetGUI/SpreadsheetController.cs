@@ -10,7 +10,7 @@ namespace SpreadsheetGUI
 {
     class SpreadsheetController
     {
-        Spreadsheet ss;
+        private Spreadsheet ss;
         public SpreadsheetController ()
         {
             ss = new Spreadsheet();
@@ -71,7 +71,8 @@ namespace SpreadsheetGUI
         /// <param name="name"></param>
         private void convertNameToInt(out int col, out int row, string name)
         {
-            throw new NotImplementedException();
+            col = 0;
+            row = 0;
         }
          
 

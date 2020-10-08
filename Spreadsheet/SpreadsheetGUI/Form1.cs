@@ -19,6 +19,8 @@ namespace SpreadsheetGUI
         {
             InitializeComponent();
 
+            AcceptButton = CalculateValuesButton;
+
             controller = new SpreadsheetController();
 
             spreadsheetPanel.SelectionChanged += selectionChanged;
@@ -27,10 +29,10 @@ namespace SpreadsheetGUI
 
         public void selectionChanged(SpreadsheetPanel ssp)
         {
-            controller.OnSelectionChanged(ssp, CellNameBox, CellContentBox, CellValueBox);
+            controller.OnSelectionChanged(ssp, cellNameBox, CellContentBox, CellValueBox);
         }
 
-        private void CellValueBox_TextChanged(object sender, EventArgs e)
+        private void CalculateValuesButton_Click(object sender, EventArgs e)
         {
             controller.OnContentsChanged(spreadsheetPanel, CellContentBox, CellValueBox);
         }
