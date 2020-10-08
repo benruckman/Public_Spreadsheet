@@ -1,4 +1,5 @@
-﻿using SS;
+﻿
+using SS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,20 @@ namespace SpreadsheetGUI
         /// <param name="cellValueBox"></param>
         public void OnSelectionChanged(SpreadsheetPanel ssp, TextBox cellNameBox, TextBox cellContentBox, TextBox cellValueBox)
         {
-            //test
             cellContentBox.Clear();
             cellContentBox.Focus();
             ssp.GetSelection(out int col, out int row);
             cellNameBox.Text = convertIntToName(col, row);
+            cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
+            if (ss.GetCellContents(convertIntToName(col, row)) is double || ss.GetCellContents(convertIntToName(col, row)) is string)
+            {
+                cellContentBox.Text = ss.GetCellContents(convertIntToName(col, row)).ToString();
+            }
+            else
+            {
+                cellContentBox.Text = "=" + ss.GetCellContents(convertIntToName(col, row)).ToString();
+            }
+           
         }
 
         /// <summary>
@@ -49,6 +59,7 @@ namespace SpreadsheetGUI
                 convertNameToInt(out updateCol, out updateRow, name);
                 ssp.SetValue(updateCol, updateRow, ss.GetCellValue(name).ToString());
             }
+            cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
         }
 
         /// <summary>
