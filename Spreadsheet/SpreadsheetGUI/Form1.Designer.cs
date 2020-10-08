@@ -65,6 +65,7 @@
             this.cellNameBox.ReadOnly = true;
             this.cellNameBox.Size = new System.Drawing.Size(28, 20);
             this.cellNameBox.TabIndex = 1;
+            this.cellNameBox.Text = "A1";
             // 
             // CellValueBox
             // 
