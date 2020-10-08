@@ -65,7 +65,7 @@ namespace SpreadsheetGUI
 
         private void HelpButton_Click(object sender, EventArgs e)
         {
-
+            controller.HelpButtonHandler();
         }
     }
 }

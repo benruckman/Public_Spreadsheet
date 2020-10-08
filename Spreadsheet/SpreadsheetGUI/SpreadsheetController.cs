@@ -62,6 +62,12 @@ namespace SpreadsheetGUI
             cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
         }
 
+        public void HelpButtonHandler()
+        {
+            string helpText = "Click on each cell to edit its contents\nType into the text box labeled contents box (this should already be selected)\nWhen done editing, press enter or press 'Enter Contents' button\nSave and open files using the menu in the top left";
+            MessageBox.Show(helpText, "Help", MessageBoxButtons.OK);
+        }
+
         /// <summary>
         /// helper method to convert a spreadsheet panel coordinate from int values to a cell name as a string
         /// NOTE: this method should handle incrementing them, provide the row and col as they are given by spreadsheetPanel
