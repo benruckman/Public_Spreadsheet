@@ -92,9 +92,42 @@ namespace SpreadsheetGUI
 
 
 
-        public void OpenFileButtonHandler()
+        public void OpenFileButtonHandler(SpreadsheetPanel ssp)
         {
+            if (ss.Changed)
+            {
+                SaveChangeErrorMessageHelper();
+            }
 
+            string filename = "";
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                   
+                    filename = openFileDialog.FileName;
+                }
+            }
+
+            try
+            {
+                ss = new Spreadsheet (filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
+                Console.WriteLine("a");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
+            }
+
+            Console.WriteLine("test");
+
+            foreach (string name in ss.GetNamesOfAllNonemptyCells())
+            {
+                Console.WriteLine(name);
+                convertNameToInt(out int col, out int row, name);
+                ssp.SetValue(col, row, ss.GetCellValue(name).ToString());
+            }
         }
 
 

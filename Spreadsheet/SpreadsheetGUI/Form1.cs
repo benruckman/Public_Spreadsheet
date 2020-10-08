@@ -30,6 +30,7 @@ namespace SpreadsheetGUI
         public void selectionChanged(SpreadsheetPanel ssp)
         {
             controller.OnSelectionChanged(ssp, cellNameBox, CellContentBox, CellValueBox);
+            
         }
 
         private void CalculateValuesButton_Click(object sender, EventArgs e)
@@ -39,7 +40,7 @@ namespace SpreadsheetGUI
 
         private void OpenFileMenuButton_Click(object sender, EventArgs e)
         {
-
+            controller.OpenFileButtonHandler(spreadsheetPanel);
         }
     }
 }
