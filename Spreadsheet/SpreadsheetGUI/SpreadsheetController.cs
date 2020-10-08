@@ -11,7 +11,7 @@ namespace SpreadsheetGUI
     class SpreadsheetController
     {
         Spreadsheet ss;
-        public SpreadsheetController ()
+        public SpreadsheetController()
         {
             ss = new Spreadsheet();
         }
@@ -23,7 +23,7 @@ namespace SpreadsheetGUI
         /// <param name="cellNameBox"></param>
         /// <param name="cellContentBox"></param>
         /// <param name="cellValueBox"></param>
-        public void OnSelectionChanged (SpreadsheetPanel ssp, TextBox cellNameBox, TextBox cellContentBox, TextBox cellValueBox)
+        public void OnSelectionChanged(SpreadsheetPanel ssp, TextBox cellNameBox, TextBox cellContentBox, TextBox cellValueBox)
         {
             //test
             cellContentBox.Clear();
@@ -38,7 +38,7 @@ namespace SpreadsheetGUI
         /// <param name="ssp"></param>
         /// <param name="cellContentBox"></param>
         /// <param name="cellValueBox"></param>
-        public void OnContentsChanged (SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
+        public void OnContentsChanged(SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
         {
             ssp.GetSelection(out int col, out int row);
             IList<string> updatedValueList = ss.SetContentsOfCell(convertIntToName(col, row), cellContentBox.Text);
@@ -58,7 +58,7 @@ namespace SpreadsheetGUI
         /// <param name="col"></param>
         /// <param name="row"></param>
         /// <returns></returns>
-        private string convertIntToName (int col, int row)
+        private string convertIntToName(int col, int row)
         {
             return "" + ((char)(col + 65)).ToString() + (row + 1).ToString();
         }
@@ -71,9 +71,11 @@ namespace SpreadsheetGUI
         /// <param name="name"></param>
         private void convertNameToInt(out int col, out int row, string name)
         {
-            throw new NotImplementedException();
-        }
-         
+            string letter = name.Substring(0, 1);
+            letter = letter.ToUpper();
+            col = char.Parse(letter) - 'A';
 
+            row = int.Parse(name.Substring(1));
+        }
     }
 }

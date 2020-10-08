@@ -27,12 +27,12 @@ namespace SpreadsheetGUI
 
         public void selectionChanged(SpreadsheetPanel ssp)
         {
-            controller.OnSelectionChanged(ssp, CellNameBox, CellContentBox, CellValueBox);
+            controller.OnSelectionChanged(ssp, CellNameBox, CellValueBox, CellContentsBox);
         }
 
-        private void CellValueBox_TextChanged(object sender, EventArgs e)
+        private void CellContentBox_TextChanged(object sender, EventArgs e)
         {
-            controller.OnContentsChanged(spreadsheetPanel, CellContentBox, CellValueBox);
+            controller.OnContentsChanged(spreadsheetPanel, CellValueBox, CellContentsBox);
         }
     }
 }
