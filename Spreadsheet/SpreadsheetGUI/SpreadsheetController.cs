@@ -75,7 +75,7 @@ namespace SpreadsheetGUI
             letter = letter.ToUpper();
             col = char.Parse(letter) - 'A';
 
-            row = int.Parse(name.Substring(1));
+            row = int.Parse(name.Substring(1)) - 1;
         }
     }
 }
