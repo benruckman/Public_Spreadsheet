@@ -13,3 +13,4 @@ October 8th, 2020
 Implemented all of the file things (ie Save file, Quit, New file, and Open file)
 Highlighting cells now works properly
 Added the making sure you want to exit message, even if the sheet hasn't been saved. 
+Starting Cell Name now starts with A1
