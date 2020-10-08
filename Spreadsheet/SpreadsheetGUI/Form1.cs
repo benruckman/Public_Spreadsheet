@@ -36,5 +36,10 @@ namespace SpreadsheetGUI
         {
             controller.OnContentsChanged(spreadsheetPanel, CellContentBox, CellValueBox);
         }
+
+        private void OpenFileMenuButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

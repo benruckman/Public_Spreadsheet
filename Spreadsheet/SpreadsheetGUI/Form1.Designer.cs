@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.spreadsheetPanel = new SS.SpreadsheetPanel();
             this.cellNameBox = new System.Windows.Forms.TextBox();
             this.CellValueBox = new System.Windows.Forms.TextBox();
@@ -36,6 +37,14 @@
             this.CellNameLabel = new System.Windows.Forms.Label();
             this.CellValueLabel = new System.Windows.Forms.Label();
             this.CellContentLabel = new System.Windows.Forms.Label();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.OpenFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.SaveFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.NewFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.QuitMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // spreadsheetPanel
@@ -111,11 +120,70 @@
             this.CellContentLabel.TabIndex = 7;
             this.CellContentLabel.Text = "Cell Contents";
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip1.TabIndex = 8;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Location = new System.Drawing.Point(0, 25);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(800, 25);
+            this.toolStrip2.TabIndex = 9;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.OpenFileMenuButton,
+            this.SaveFileMenuButton,
+            this.NewFileMenuButton,
+            this.QuitMenuButton});
+            this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+            // 
+            // OpenFileMenuButton
+            // 
+            this.OpenFileMenuButton.Name = "OpenFileMenuButton";
+            this.OpenFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.OpenFileMenuButton.Text = "Open File";
+            this.OpenFileMenuButton.Click += new System.EventHandler(this.OpenFileMenuButton_Click);
+            // 
+            // SaveFileMenuButton
+            // 
+            this.SaveFileMenuButton.Name = "SaveFileMenuButton";
+            this.SaveFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.SaveFileMenuButton.Text = "Save File";
+            // 
+            // NewFileMenuButton
+            // 
+            this.NewFileMenuButton.Name = "NewFileMenuButton";
+            this.NewFileMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.NewFileMenuButton.Text = "New File";
+            // 
+            // QuitMenuButton
+            // 
+            this.QuitMenuButton.Name = "QuitMenuButton";
+            this.QuitMenuButton.Size = new System.Drawing.Size(180, 22);
+            this.QuitMenuButton.Text = "Quit";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.toolStrip2);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.CellContentLabel);
             this.Controls.Add(this.CellValueLabel);
             this.Controls.Add(this.CellNameLabel);
@@ -126,6 +194,8 @@
             this.Controls.Add(this.spreadsheetPanel);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,6 +211,13 @@
         private System.Windows.Forms.Label CellNameLabel;
         private System.Windows.Forms.Label CellValueLabel;
         private System.Windows.Forms.Label CellContentLabel;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+        private System.Windows.Forms.ToolStripMenuItem OpenFileMenuButton;
+        private System.Windows.Forms.ToolStripMenuItem SaveFileMenuButton;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripMenuItem NewFileMenuButton;
+        private System.Windows.Forms.ToolStripMenuItem QuitMenuButton;
     }
 }
 

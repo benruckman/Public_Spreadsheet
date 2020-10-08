@@ -88,5 +88,30 @@ namespace SpreadsheetGUI
 
             row = int.Parse(name.Substring(1)) - 1;
         }
+
+
+
+
+        public void OpenFileButtonHandler()
+        {
+
+        }
+
+
+        public void SaveFileButtonHandler()
+        {
+
+        }
+
+
+        public void NewFileButtonHandler()
+        {
+
+        }
+
+        private void SaveChangeErrorMessageHelper()
+        {
+
+        }
     }
 }
