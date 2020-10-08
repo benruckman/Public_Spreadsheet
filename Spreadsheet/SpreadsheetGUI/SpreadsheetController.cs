@@ -25,6 +25,7 @@ namespace SpreadsheetGUI
         /// <param name="cellValueBox"></param>
         public void OnSelectionChanged (SpreadsheetPanel ssp, TextBox cellNameBox, TextBox cellContentBox, TextBox cellValueBox)
         {
+            //test
             cellContentBox.Clear();
             cellContentBox.Focus();
             ssp.GetSelection(out int col, out int row);
