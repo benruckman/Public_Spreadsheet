@@ -62,6 +62,12 @@ namespace SpreadsheetGUI
             cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
         }
 
+        public void HelpButtonHandler()
+        {
+            string helpText = "Click on each cell to edit its contents\nType into the text box labeled contents box (this should already be selected)\nWhen done editing, press enter or press 'Enter Contents' button\nSave and open files using the menu in the top left";
+            MessageBox.Show(helpText, "Help", MessageBoxButtons.OK);
+        }
+
         /// <summary>
         /// helper method to convert a spreadsheet panel coordinate from int values to a cell name as a string
         /// NOTE: this method should handle incrementing them, provide the row and col as they are given by spreadsheetPanel
@@ -91,6 +97,7 @@ namespace SpreadsheetGUI
 
 
 
+
         public void OpenFileButtonHandler(SpreadsheetPanel ssp)
         {
             if (ss.Changed)
@@ -104,6 +111,7 @@ namespace SpreadsheetGUI
                 openFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
+                   
                     filename = openFileDialog.FileName;
                 }
             }
@@ -112,7 +120,7 @@ namespace SpreadsheetGUI
             {
                 ss = new Spreadsheet(filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
             }
-            catch (Exception e)
+            catch
             {
                 MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
             }

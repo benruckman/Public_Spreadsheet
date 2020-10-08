@@ -43,6 +43,7 @@
             this.SaveFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.NewFileMenuButton = new System.Windows.Forms.ToolStripMenuItem();
             this.QuitMenuButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,7 +123,8 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.HelpButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -171,6 +173,16 @@
             this.QuitMenuButton.Text = "Quit";
             this.QuitMenuButton.Click += new System.EventHandler(this.QuitMenuButton_Click);
             // 
+            // HelpButton
+            // 
+            this.HelpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.HelpButton.Image = ((System.Drawing.Image)(resources.GetObject("HelpButton.Image")));
+            this.HelpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.HelpButton.Name = "HelpButton";
+            this.HelpButton.Size = new System.Drawing.Size(36, 22);
+            this.HelpButton.Text = "Help";
+            this.HelpButton.Click += new System.EventHandler(this.HelpButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,6 +222,7 @@
         private System.Windows.Forms.ToolStripMenuItem SaveFileMenuButton;
         private System.Windows.Forms.ToolStripMenuItem NewFileMenuButton;
         private System.Windows.Forms.ToolStripMenuItem QuitMenuButton;
+        private System.Windows.Forms.ToolStripButton HelpButton;
     }
 }
 

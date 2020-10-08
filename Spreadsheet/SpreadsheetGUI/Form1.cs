@@ -57,5 +57,15 @@ namespace SpreadsheetGUI
             if (controller.QuitFileButtonHandler())
                 Close();
         }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+
+        }
+
+        private void HelpButton_Click(object sender, EventArgs e)
+        {
+            controller.HelpButtonHandler();
+        }
     }
 }
