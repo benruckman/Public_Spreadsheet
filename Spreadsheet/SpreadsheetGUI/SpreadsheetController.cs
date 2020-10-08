@@ -96,7 +96,10 @@ namespace SpreadsheetGUI
         {
             if (ss.Changed)
             {
-                SaveChangeErrorMessageHelper();
+                if(SaveChangeErrorMessageHelper())
+                {
+                    return;
+                }
             }
 
             string filename = "";
@@ -113,18 +116,16 @@ namespace SpreadsheetGUI
             try
             {
                 ss = new Spreadsheet (filename, ss.IsValid, ss.Normalize, ss.GetSavedVersion(filename));
-                Console.WriteLine("a");
             }
             catch (Exception e)
             {
                 MessageBox.Show("Error Opening File", "Error", MessageBoxButtons.OK);
             }
 
-            Console.WriteLine("test");
+            ssp.Clear();
 
             foreach (string name in ss.GetNamesOfAllNonemptyCells())
             {
-                Console.WriteLine(name);
                 convertNameToInt(out int col, out int row, name);
                 ssp.SetValue(col, row, ss.GetCellValue(name).ToString());
             }
@@ -133,36 +134,54 @@ namespace SpreadsheetGUI
 
         public void SaveFileButtonHandler()
         {
-            ss.Save("ps6");//To implement to get the filename to save down as.
+            string filename = "";
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Spreadsheet (*.sprd)|*.sprd";
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+
+                    filename = saveFileDialog.FileName;
+                }
+            }
+
+            ss.Save(filename);
         }
 
 
         public void NewFileButtonHandler()
         {
             if (ss.Changed)
-                SaveChangeErrorMessageHelper();
+            {
+                if (SaveChangeErrorMessageHelper())
+                {
+                    return;
+                }
+            }
         }
 
         public void QuitFileButtonHandler()
         {
             if (ss.Changed)
-                SaveChangeErrorMessageHelper();
-            Quit();
+            {
+                if (SaveChangeErrorMessageHelper())
+                {
+                    return;
+                }
+            }
         }
 
-        private void SaveChangeErrorMessageHelper()
+        private bool SaveChangeErrorMessageHelper()
         {
             DialogResult res = MessageBox.Show("Your data isn't saved, if you quit you will lose your changes", "Changes not saved", MessageBoxButtons.OKCancel);
             if (res.ToString().Equals("OK"))
             {
-                Quit();
+                return false;
             }
-        }
-
-        private void Quit()
-        {
-            
-            /*throw new NotImplementedException();*/
+            else
+            {
+                return true;
+            }
         }
     }
 }
