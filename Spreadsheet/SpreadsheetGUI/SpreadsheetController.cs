@@ -64,7 +64,10 @@ namespace SpreadsheetGUI
 
         public void HelpButtonHandler()
         {
-            string helpText = "Click on each cell to edit its contents\nType into the text box labeled contents box (this should already be selected)\nWhen done editing, press enter or press 'Enter Contents' button\nSave and open files using the menu in the top left";
+            string helpText = "Click on each cell to edit its contents\nType into the text box labeled Cell Contents (this should already be selected)\nWhen done editing, press enter or press 'Enter Contents' button"
+                + "\nSave and open files using the menu in the top left\n\nEXTRA FEATURES:\nUse The Up Arrow key to create a sum of all cells above and in the same column as the current selection"
+                + "\nUse The Left Arrow key to create a sum of all cells to the left and in the same row as te current selection\nSums will ignore all cells containing text";
+
             MessageBox.Show(helpText, "Help", MessageBoxButtons.OK);
         }
 

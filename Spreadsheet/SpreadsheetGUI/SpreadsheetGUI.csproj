@@ -90,5 +90,8 @@
       <Name>Spreadsheet</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="File-Explorer-icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
