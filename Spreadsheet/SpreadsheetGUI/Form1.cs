@@ -82,6 +82,10 @@ namespace SpreadsheetGUI
                 controller.createColumnSum(spreadsheetPanel, CellContentBox, CellValueBox);
                 return true;
             }
+            else if (keyData == Keys.Left)
+            {
+                controller.createLessRowSum(spreadsheetPanel, CellContentBox, CellValueBox);
+            }
             return base.ProcessCmdKey(ref msg, keyData);
         }
     }
