@@ -80,11 +80,15 @@ namespace SpreadsheetGUI
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (controller.QuitFileButtonHandler())
-            {
-                return;
-            }
             base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+
+            // Confirm user wants to close
+            if (!controller.QuitFileButtonHandler())
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
