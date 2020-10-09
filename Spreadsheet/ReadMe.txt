@@ -14,3 +14,10 @@ Implemented all of the file things (ie Save file, Quit, New file, and Open file)
 Highlighting cells now works properly
 Added the making sure you want to exit message, even if the sheet hasn't been saved. 
 Starting Cell Name now starts with A1
+
+October 9th, 2020
+We made our "special feature". Its where you can use the Up Arrow key to create a sum of all cells above and in the same column as the current selection,
+and use The Left Arrow key to create a sum of all cells to the left and in the same row as te current selection.
+The Sums will ignore all cells containing text
+Because our spreadsheet implementation would come up with formula errors if you =A1, but A1 doesn't have any contents, we can't make the sum feature sum
+the empty cells.
