@@ -96,8 +96,8 @@ namespace SpreadsheetUtilities
             int numClosedParentese = 0;
 
             String prevToken = "";
-            
-            foreach(String currentToken in GetTokens(formula))
+
+            foreach (String currentToken in GetTokens(formula))
             {
                 //beggining 
                 if (prevToken == "(" || IsOperator(prevToken))
@@ -107,7 +107,7 @@ namespace SpreadsheetUtilities
                         throw new FormulaFormatException("Invalid character following ( or operator");
                     }
                 }
-                
+
                 if (prevToken == ")" || Double.TryParse(prevToken, out _) || IsVariable(prevToken, normalize, isValid))
                 {
                     if (!(IsOperator(currentToken) || currentToken == ")"))
@@ -160,7 +160,7 @@ namespace SpreadsheetUtilities
                     {
                         Variables.Add(normalize(currentToken));
                     }
-                    
+
                 }
 
                 //handles when an invalid token appears as current token
@@ -193,7 +193,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool IsVariable (String s, Func<string, string> normalize, Func<string, bool> isValid)
+        private bool IsVariable(String s, Func<string, string> normalize, Func<string, bool> isValid)
         {
             return Regex.IsMatch(s, "^[a-zA-Z_]([a-zA-Z_]|\\d)*$") && isValid(normalize(s));
         }
@@ -203,7 +203,7 @@ namespace SpreadsheetUtilities
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        private bool IsOperator (String s)
+        private bool IsOperator(String s)
         {
             if (s == "+" || s == "-" || s == "*" || s == "/")
             {
