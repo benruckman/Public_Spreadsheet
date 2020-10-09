@@ -58,21 +58,10 @@ namespace SpreadsheetGUI
                 Close();
         }
 
-        private void Form1_Deactivate(object sender, EventArgs e)
-        {
-
-        }
-
         private void HelpButton_Click(object sender, EventArgs e)
         {
             controller.HelpButtonHandler();
         }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
 
         //This code is inspired by stackOverflow
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -87,6 +76,15 @@ namespace SpreadsheetGUI
                 controller.createLessRowSum(spreadsheetPanel, CellContentBox, CellValueBox);
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (controller.QuitFileButtonHandler())
+            {
+                return;
+            }
+            base.OnFormClosing(e);
         }
     }
 }
