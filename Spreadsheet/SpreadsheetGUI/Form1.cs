@@ -67,5 +67,22 @@ namespace SpreadsheetGUI
         {
             controller.HelpButtonHandler();
         }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+
+        //This code is inspired by stackOverflow
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Up)
+            {
+                controller.createColumnSum(spreadsheetPanel, CellContentBox, CellValueBox);
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

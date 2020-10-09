@@ -166,5 +166,32 @@ namespace SpreadsheetGUI
             DialogResult res = MessageBox.Show("Your data isn't saved, if you quit you will lose your changes", "Changes not saved", MessageBoxButtons.OKCancel);
             return !res.ToString().Equals("OK");
         }
+
+        public void createColumnSum (SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
+        {
+            ssp.GetSelection(out int col, out int row);
+            cellContentBox.Text = generateSumHelper((a, b) => (a.ElementAt(0) == b.ElementAt(0) && int.Parse(a.Substring(1)) > int.Parse(b.Substring(1))), convertIntToName(col, row));
+            OnContentsChanged(ssp, cellContentBox, cellValueBox);
+        }
+
+        public void createLessRowSum (SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
+        {
+            ssp.GetSelection(out int col, out int row);
+            cellContentBox.Text = generateSumHelper((a, b) => (a.ElementAt(0) > b.ElementAt(0) && int.Parse(a.Substring(1)) == int.Parse(b.Substring(1))), convertIntToName(col, row));
+            OnContentsChanged(ssp, cellContentBox, cellValueBox);
+        }
+
+        private string generateSumHelper (Func<string, string, bool> inSumChecker, string cellName)
+        {
+            string returnString = "=0";
+            foreach (string name in ss.GetNamesOfAllNonemptyCells())
+            {
+                if(inSumChecker(cellName, name) && ss.GetCellValue(name) is double)
+                {
+                    returnString += "+" + name; 
+                }
+            }
+            return returnString;
+        }
     }
 }
