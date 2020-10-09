@@ -57,9 +57,23 @@ namespace SpreadsheetGUI
             foreach (string name in updatedValueList)
             {
                 convertNameToInt(out updateCol, out updateRow, name);
-                ssp.SetValue(updateCol, updateRow, ss.GetCellValue(name).ToString());
+                if (ss.GetCellValue(name).ToString() == "SpreadsheetUtilities.FormulaError")
+                {
+                    ssp.SetValue(updateCol, updateRow, "Invalid Formula");
+                }
+                else
+                {
+                    ssp.SetValue(updateCol, updateRow, ss.GetCellValue(name).ToString());
+                }
             }
-            cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
+            if (ss.GetCellValue(convertIntToName(col, row)).ToString() == "SpreadsheetUtilities.FormulaError")
+            {
+                cellValueBox.Text = "Invalid Formula";
+            }
+            else
+            {
+                cellValueBox.Text = ss.GetCellValue(convertIntToName(col, row)).ToString();
+            }
         }
 
         public void HelpButtonHandler()
