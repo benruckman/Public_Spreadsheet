@@ -15,7 +15,7 @@ namespace SpreadsheetGUI
         Spreadsheet ss;
         public SpreadsheetController()
         {
-            ss = new Spreadsheet(s => Regex.IsMatch(s, "^[A-Z][0-99]$"), s => s.ToUpper(), "PS6");
+            ss = new Spreadsheet(s => Regex.IsMatch(s, "^[A-Z][0-9]{1,2}$"), s => s.ToUpper(), "PS6");
         }
 
         /// <summary>
