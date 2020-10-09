@@ -14,7 +14,12 @@ namespace SpreadsheetGUI
         Spreadsheet ss;
         public SpreadsheetController()
         {
-            ss = new Spreadsheet();
+            ss = new Spreadsheet(IsValid, x => x.ToUpper(), "ps6");
+        }
+
+        private bool IsValid(string arg)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -128,7 +133,7 @@ namespace SpreadsheetGUI
                 openFileDialog.Filter = "Spreadsheet files (*.sprd)|*.sprd|All files (*.*)|*.*";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                   
+
                     filename = openFileDialog.FileName;
                 }
             }
@@ -184,28 +189,28 @@ namespace SpreadsheetGUI
             return !res.ToString().Equals("OK");
         }
 
-        public void createColumnSum (SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
+        public void createColumnSum(SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
         {
             ssp.GetSelection(out int col, out int row);
             cellContentBox.Text = generateSumHelper((a, b) => (a.ElementAt(0) == b.ElementAt(0) && int.Parse(a.Substring(1)) > int.Parse(b.Substring(1))), convertIntToName(col, row));
             OnContentsChanged(ssp, cellContentBox, cellValueBox);
         }
 
-        public void createLessRowSum (SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
+        public void createLessRowSum(SpreadsheetPanel ssp, TextBox cellContentBox, TextBox cellValueBox)
         {
             ssp.GetSelection(out int col, out int row);
             cellContentBox.Text = generateSumHelper((a, b) => (a.ElementAt(0) > b.ElementAt(0) && int.Parse(a.Substring(1)) == int.Parse(b.Substring(1))), convertIntToName(col, row));
             OnContentsChanged(ssp, cellContentBox, cellValueBox);
         }
 
-        private string generateSumHelper (Func<string, string, bool> inSumChecker, string cellName)
+        private string generateSumHelper(Func<string, string, bool> inSumChecker, string cellName)
         {
             string returnString = "=0";
             foreach (string name in ss.GetNamesOfAllNonemptyCells())
             {
-                if(inSumChecker(cellName, name) && ss.GetCellValue(name) is double)
+                if (inSumChecker(cellName, name) && ss.GetCellValue(name) is double)
                 {
-                    returnString += "+" + name; 
+                    returnString += "+" + name;
                 }
             }
             return returnString;
